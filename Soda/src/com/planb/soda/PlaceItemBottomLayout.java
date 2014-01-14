@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.RelativeLayout;
@@ -37,7 +38,9 @@ public class PlaceItemBottomLayout extends RelativeLayout {
 		dist.setTextColor(0xFF000000);
     	//title set position and view
 		RelativeLayout.LayoutParams rlpForDist=  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlpForDist.setMargins((int) (screenW*0.015825),0,0,0);
+		
+		
+		rlpForDist.setMargins((int) (screenW*0.078125*1.2),(int) (screenW*0.09375- 48) ,0,0);
 		dist.setLayoutParams(rlpForDist);
 		this.addView(dist);
 		

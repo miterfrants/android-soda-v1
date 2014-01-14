@@ -40,7 +40,6 @@ public class ListActivity extends Activity {
 			    		Log.d("test","test exception occur:"+ex.getMessage());
 			    	}
 			    }
-			    
 			    @Override
 			    public void onFailure(Throwable e, String response){
 			    	Log.d("test","test async get google api error:"+ e.getMessage());
@@ -69,11 +68,10 @@ public class ListActivity extends Activity {
 					lpForButton.setMargins(0,i*lpForButton.height, 0, 0);
 					btn.setLayoutParams(lpForButton);
 					btn.bottomLayout.title.setText(item.getString("name"));
-					//dist
-					//JSONObject location=item.getJSONObject("geometry").getJSONObject("location");
-					//btn.getDist(Double.parseDouble(location.getString("lat")), Double.parseDouble(location.getString("lng")));
+					JSONObject location=item.getJSONObject("geometry").getJSONObject("location");
+					btn.lat=Double.parseDouble(location.getString("lat"));
+					btn.lng=Double.parseDouble(location.getString("lng"));
 					//String urlDist="https://maps.googleapis.com/maps/api/distancematrix/json?origins=%.8F,%.8F&destinations=%.8F,%.8F&mode=walk&language=zh-TW&sensor=false";
-					//btn.bottomLayout.dist.setText("¶ZÂ÷");
 					Log.d("test","test item name:"+item.getString("name"));
 					if(item.has("rating")){
 						btn.rateLayout.setRating((float) item.getDouble("rating")/5);
@@ -87,6 +85,11 @@ public class ListActivity extends Activity {
 					}
 				   rlList.addView(btn);
 			   }
+			   for(int i=0;i<rlList.getChildCount();i++){
+			       PlaceItem child=(PlaceItem) rlList.getChildAt(i);
+			       child.getDist();
+			       //your processing....
+			  }
 		   }else{
 			   Log.d("test","test:"+ status);
 		   }

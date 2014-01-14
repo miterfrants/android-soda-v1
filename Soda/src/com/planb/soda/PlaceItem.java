@@ -21,7 +21,8 @@ public class PlaceItem extends RelativeLayout {
 	public PlaceItemBottomLayout bottomLayout=null;
 	public RateLayout rateLayout=null;
 	public ImageView bg=null;
-	private static final String key ="AIzaSyCYM1UUnXbgP3eD__x2EjIugNOy-vE3McY";
+	public double lat=0;
+	public double lng=0;
 	public PlaceItem(Context context,int screenW) {
 		super(context);
 		
@@ -62,7 +63,7 @@ public class PlaceItem extends RelativeLayout {
 		
     }
     
-    public void getDist(double lat,double lng){
+    public void getDist(){
     	AsyncHttpClient client = new AsyncHttpClient();
     	LocationManager lm=(LocationManager) this.getContext().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
     	Location loc=ShareVariable.getLocation(lm);
@@ -70,6 +71,7 @@ public class PlaceItem extends RelativeLayout {
     	distLoc.setLatitude(lat);
     	distLoc.setLongitude(lng);
     	final float defaultDistance =distLoc.distanceTo(loc);
+    	Log.d("test","test dist url:"+ "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+String.valueOf(loc.getLatitude())+","+String.valueOf(loc.getLongitude())+"&destinations="+String.valueOf(lat)+","+String.valueOf(lng)+"&mode=walk&sensor=false&language=zh-TW");
     	client.get("https://maps.googleapis.com/maps/api/distancematrix/json?origins="+String.valueOf(loc.getLatitude())+","+String.valueOf(loc.getLongitude())+"&destinations="+String.valueOf(lat)+","+String.valueOf(lng)+"&mode=walk&sensor=false&language=zh-TW", new AsyncHttpResponseHandler() {
 		    @Override
 		    public void onSuccess(String response) {
@@ -81,20 +83,19 @@ public class PlaceItem extends RelativeLayout {
 		    			JSONArray arrElements =arrRows.getJSONObject(0).getJSONArray("elements");
 		    			if(arrElements.length()>0){
 		    				JSONObject element=arrElements.getJSONObject(0);
+		    				Log.d("test","test: distance "+element.getJSONObject("distance").getString("text"));
 		    				bottomLayout.dist.setText(element.getJSONObject("distance").getString("text"));
 		    			}else{
-		    				Log.d("test","aa");
+		    				bottomLayout.dist.setText(getDistText(defaultDistance));
 		    			}
 		    		}else{
-		    			Log.d("test","b");
+		    			bottomLayout.dist.setText(getDistText(defaultDistance));
 		    		}
 		    		//this.bottomLayout.dist.setText();
 		    	}catch(Exception ex){
 		    		try{
-		    			Log.d("test","c");
-		    			bottomLayout.dist.setText(String.valueOf(defaultDistance));
+		    			bottomLayout.dist.setText(getDistText(defaultDistance));
 		    		}catch(Exception ex1){
-		    			Log.d("test","d");
 		    			Log.d("test","exception:"+ex1.getMessage());
 		    			ex1.printStackTrace();
 		    		}
@@ -105,12 +106,20 @@ public class PlaceItem extends RelativeLayout {
 		    
 		    @Override
 		    public void onFailure(Throwable e, String response){
-		    	bottomLayout.dist.setText(String.valueOf(defaultDistance));
-		    	//Log.d("test","test async get google api error:"+ e.getMessage());
+		    	bottomLayout.dist.setText(getDistText(defaultDistance));
+		    	Log.d("test","test async get google api error:"+ e.getMessage());
 		    }
 		});
     	
     }
-    
+    public String getDistText(float dist){
+    	if(dist>1000){
+    		float res=Math.round(Math.round(dist/1000)*100)/100;
+    		return String.valueOf(res) + " ¤½¨½";
+    	}else{
+    		float res=Math.round(dist*100)/100;
+    		return String.valueOf(res) + " ¤½¤Ø";
+    	}
+    }
 
 }
