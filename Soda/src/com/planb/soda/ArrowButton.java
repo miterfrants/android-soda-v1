@@ -38,6 +38,5 @@ public class ArrowButton extends Button {
 		
 		
 	}
-	
 
 }

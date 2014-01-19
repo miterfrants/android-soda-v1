@@ -11,4 +11,5 @@ public class PlaceCateButton extends ImageButton {
 	public String title="";
 	public String type="";
 	public String keyword="";
+	public String otherSource="";
 }

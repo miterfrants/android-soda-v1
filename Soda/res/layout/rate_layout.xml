@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".MainActivity"
+    android:padding="0dp"
+     >
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         ></TextView>
+<RatingBar
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:progressDrawable="@drawable/vertical_rating_bar"
+    android:name="verticalf_rating_bar"
+   android:id="@+id/vertical_rating_bar"
+   android:numStars="1"
+   android:stepSize="0.01"
+   android:clickable="false"
+   android:rotation="-90"
+     >
+</RatingBar>
+</RelativeLayout>

@@ -58,6 +58,9 @@ public class MainActivity extends Activity {
 				btn.keyword=item.getString("keyword");
 				btn.title=item.getString("name");
 				btn.type=item.getString("type");
+				if(item.has("other-source")){
+					btn.otherSource=item.getString("other-source");
+				}
 				int id =getApplicationContext().getResources().getIdentifier(item.getString("pic"), "drawable", getPackageName());
 				Bitmap bm=BitmapFactory.decodeResource(getResources(),id);
 				btn.setImageBitmap(Bitmap.createScaledBitmap(bm, 120, 120, false));
@@ -69,6 +72,7 @@ public class MainActivity extends Activity {
 				    	intentMain.putExtra("title", btn.title);
 				    	intentMain.putExtra("type", btn.type);
 				    	intentMain.putExtra("keyword", btn.keyword);
+				    	intentMain.putExtra("otherSource", btn.otherSource);
 				    	v.getContext().startActivity(intentMain);				    	
 				    }
 				});
