@@ -1,36 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.aretha.slidemenu.SlideMenu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
     android:id="@+id/rl_for_activity_list"
     tools:context=".MainActivity" >
-
-    <Button
-        android:id="@+id/btn_get_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@+drawable/circle_button"
-        android:text="@+string/more"
-        android:textColor="#FFFFFF"
-         >
-    </Button>
-
-    <com.planb.soda.ScrollViewForPlaceItem
-        android:id="@+id/sv_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:padding="0dp" >
-
-        <RelativeLayout
-            android:id="@+id/rl_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </RelativeLayout>
-    </com.planb.soda.ScrollViewForPlaceItem>
-
-</RelativeLayout>
+</com.aretha.slidemenu.SlideMenu>

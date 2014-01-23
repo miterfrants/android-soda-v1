@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -21,6 +20,8 @@ public class PlaceItem extends RelativeLayout {
 	public PlaceItemBottomLayout bottomLayout=null;
 	public RateLayout rateLayout=null;
 	public ImageView bg=null;
+	public String address="";
+	public String name="";
 	public double lat=0;
 	public double lng=0;
 	public PlaceItem(Context context,int screenW) {
@@ -65,25 +66,26 @@ public class PlaceItem extends RelativeLayout {
     
     public void getDist(){
     	AsyncHttpClient client = new AsyncHttpClient();
+    	
     	LocationManager lm=(LocationManager) this.getContext().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
     	Location loc=ShareVariable.getLocation(lm);
     	Location distLoc=new Location("");
     	distLoc.setLatitude(lat);
     	distLoc.setLongitude(lng);
     	final float defaultDistance =distLoc.distanceTo(loc);
-    	Log.d("test","test dist url:"+ "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+String.valueOf(loc.getLatitude())+","+String.valueOf(loc.getLongitude())+"&destinations="+String.valueOf(lat)+","+String.valueOf(lng)+"&mode=walk&sensor=false&language=zh-TW");
+    	//Log.d("test","test dist url:"+ "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+String.valueOf(loc.getLatitude())+","+String.valueOf(loc.getLongitude())+"&destinations="+String.valueOf(lat)+","+String.valueOf(lng)+"&mode=walk&sensor=false&language=zh-TW");
     	client.get("https://maps.googleapis.com/maps/api/distancematrix/json?origins="+String.valueOf(loc.getLatitude())+","+String.valueOf(loc.getLongitude())+"&destinations="+String.valueOf(lat)+","+String.valueOf(lng)+"&mode=walk&sensor=false&language=zh-TW", new AsyncHttpResponseHandler() {
 		    @Override
 		    public void onSuccess(String response) {
 		    	try{
-		    		Log.d("test","test:"+response);
+		    		//Log.d("test","test:"+response);
 		    		JSONObject res=new JSONObject(response);
+		    		address=res.getString("destination_addresses");
 		    		JSONArray arrRows =res.getJSONArray("rows");
 		    		if(arrRows.length()>0){
 		    			JSONArray arrElements =arrRows.getJSONObject(0).getJSONArray("elements");
 		    			if(arrElements.length()>0){
 		    				JSONObject element=arrElements.getJSONObject(0);
-		    				Log.d("test","test: distance "+element.getJSONObject("distance").getString("text"));
 		    				bottomLayout.dist.setText(element.getJSONObject("distance").getString("text"));
 		    			}else{
 		    				bottomLayout.dist.setText(getDistText(defaultDistance));
@@ -100,7 +102,6 @@ public class PlaceItem extends RelativeLayout {
 		    			ex1.printStackTrace();
 		    		}
 		    		
-		    		//
 		    	}
 		    }
 		    
@@ -109,6 +110,10 @@ public class PlaceItem extends RelativeLayout {
 		    	bottomLayout.dist.setText(getDistText(defaultDistance));
 		    	Log.d("test","test async get google api error:"+ e.getMessage());
 		    }
+		    
+		    
+		    
+		    
 		});
     	
     }

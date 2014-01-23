@@ -1,36 +1,79 @@
 package com.planb.soda;
 
-import javax.xml.datatype.DatatypeConstants.Field;
+//import java.io.ByteArrayOutputStream;
+//import java.io.InputStream;
+
 import android.os.Bundle;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import com.aretha.slidemenu.*;
 import org.json.*;
 
+//import net.frakbot.imageviewex.ImageViewEx;
+
+@SuppressLint("NewApi")
 public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.activity_main);
-		String jsonConfig ="{\"cate\":["
+		int screenW = getWindowManager().getDefaultDisplay().getWidth();
+		SlideMenu slideMenu = new SlideMenu(this);
+		// setContentView(R.layout.activity_main);
+		setContentView(slideMenu);
+		ScrollView sc = new ScrollView(this);
+
+		RelativeLayout rl = new RelativeLayout(this);
+		sc.addView(rl);
+
+		slideMenu.addView(sc, new SlideMenu.LayoutParams(
+				SlideMenu.LayoutParams.MATCH_PARENT,
+				SlideMenu.LayoutParams.MATCH_PARENT,
+				SlideMenu.LayoutParams.ROLE_CONTENT));
+
+		slideMenu
+				.setSlideDirection(com.aretha.slidemenu.SlideMenu.STATE_OPEN_RIGHT);
+
+		View view = new View(this);
+		slideMenu.addView(view, new SlideMenu.LayoutParams(
+				(int) (screenW * 0.9), SlideMenu.LayoutParams.MATCH_PARENT,
+				SlideMenu.LayoutParams.ROLE_SECONDARY_MENU));
+		slideMenu.setSlideDirection(SlideMenu.FLAG_DIRECTION_LEFT);
+
+		// try {
+		// rl.setBackgroundColor(0xFFFFFFFF);
+		// ImageViewEx.setCanAlwaysAnimate(true);
+		// // net.frakbot.imageviewex.ImageViewEx test = new
+		// net.frakbot.imageviewex.ImageViewEx(this.getApplicationContext());
+		// // Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+		// R.drawable.loading);
+		// // ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		// // bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+		// // byte[] bitMapData = stream.toByteArray();
+		// // test.setSource(bitMapData);
+		// // ImageViewEx test= new
+		// ImageViewEx(this.getApplicationContext(),getResources().openRawResource(R.drawable.loading));
+		// RelativeLayout.LayoutParams rlForTest= new
+		// RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+		// test.setBackgroundColor(0xFFFF0000);
+		// test.setLayoutParams(rlForTest);
+		// rl.addView(test);
+		//
+		// } catch (Exception e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+
+		String jsonConfig = "{\"cate\":["
 				+ "{\"name\":\"小吃\",\"keyword\":\"小吃\",\"type\":\"\",\"pic\":\"cate_food\",\"bg\":\"\",\"color\":\"#ffb7dd6c\"},"
 				+ "{\"name\":\"景點\",\"keyword\":\"旅遊景點\",\"type\":\"\",\"pic\":\"cate_attraction\",\"bg\":\"tourist-attraction-gray-640x320\",\"color\":\"#ffabd156\"},"
 				+ "{\"name\":\"餐廳\",\"keyword\":\"餐廳\",\"type\":\"\",\"pic\":\"cate_rest\",\"bg\":\"restaurants-gray-640x320.png\",\"color\":\"#ffb4da5f\"},"
@@ -40,70 +83,73 @@ public class MainActivity extends Activity {
 				+ "{\"name\":\"加油站\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_gas\",\"bg\":\"hotel-gray-640x320.png\",\"color\":\"#ffb7dd6c\",\"other-source\":\"/controller/mobile/place.aspx?action=get-gas\"},"
 				+ "{\"name\":\"租車\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_rental\",\"bg\":\"hotel-gray-640x320.png\",\"color\":\"#ffabd156\",\"other-source\":\"/controller/mobile/place.aspx?action=get-rental\"}"
 				+ "]}";
-		
-		try{
-			JSONObject config=new JSONObject(jsonConfig);
-			int screenW=getWindowManager().getDefaultDisplay().getWidth();
-			for(int i=0;i<config.getJSONArray("cate").length();i++){
-				JSONObject item=(JSONObject) config.getJSONArray("cate").get(i);
-				PlaceCateButton btn=new PlaceCateButton(this.getApplicationContext());
-				RelativeLayout rl=(RelativeLayout) this.findViewById(R.id.rl);
-			
+
+		try {
+			JSONObject config = new JSONObject(jsonConfig);
+
+			for (int i = 0; i < config.getJSONArray("cate").length(); i++) {
+				JSONObject item = (JSONObject) config.getJSONArray("cate").get(
+						i);
+				PlaceCateButton btn = new PlaceCateButton(
+						this.getApplicationContext());
+
 				btn.setBackgroundColor(Color.parseColor(item.getString("color")));
-				RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-				lpForButton.width=screenW/2;
-				lpForButton.height=screenW/2;
-				lpForButton.setMargins(i%2*screenW/2,(int) Math.floor(i/2)*screenW/2, 0, 0);
+				RelativeLayout.LayoutParams lpForButton = new RelativeLayout.LayoutParams(
+						RelativeLayout.LayoutParams.WRAP_CONTENT,
+						RelativeLayout.LayoutParams.WRAP_CONTENT);
+				lpForButton.width = screenW / 2;
+				lpForButton.height = screenW / 2;
+				lpForButton.setMargins(i % 2 * screenW / 2,
+						(int) Math.floor(i / 2) * screenW / 2, 0, 0);
 				btn.setLayoutParams(lpForButton);
-				btn.keyword=item.getString("keyword");
-				btn.title=item.getString("name");
-				btn.type=item.getString("type");
-				if(item.has("other-source")){
-					btn.otherSource=item.getString("other-source");
+				btn.keyword = item.getString("keyword");
+				btn.title = item.getString("name");
+				btn.type = item.getString("type");
+				if (item.has("other-source")) {
+					btn.otherSource = item.getString("other-source");
 				}
-				int id =getApplicationContext().getResources().getIdentifier(item.getString("pic"), "drawable", getPackageName());
-				Bitmap bm=BitmapFactory.decodeResource(getResources(),id);
-				btn.setImageBitmap(Bitmap.createScaledBitmap(bm, 120, 120, false));
+				int id = getApplicationContext().getResources().getIdentifier(
+						item.getString("pic"), "drawable", getPackageName());
+				Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+				btn.setImageBitmap(Bitmap.createScaledBitmap(bm, 120, 120,
+						false));
 				btn.setOnClickListener(new View.OnClickListener() {
-				    public void onClick(View v) {
-				    	PlaceCateButton btn=(PlaceCateButton) v;
-				    	Intent intentMain = new Intent(v.getContext(),com.planb.soda.ListActivity.class);
-				    	intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				    	intentMain.putExtra("title", btn.title);
-				    	intentMain.putExtra("type", btn.type);
-				    	intentMain.putExtra("keyword", btn.keyword);
-				    	intentMain.putExtra("otherSource", btn.otherSource);
-				    	v.getContext().startActivity(intentMain);				    	
-				    }
+					public void onClick(View v) {
+						PlaceCateButton btn = (PlaceCateButton) v;
+						Intent intentMain = new Intent(v.getContext(),
+								com.planb.soda.ListActivity.class);
+						intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						intentMain.putExtra("title", btn.title);
+						intentMain.putExtra("type", btn.type);
+						intentMain.putExtra("keyword", btn.keyword);
+						intentMain.putExtra("otherSource", btn.otherSource);
+						v.getContext().startActivity(intentMain);
+					}
 				});
 
-				
 				rl.addView(btn);
-			}	
-		}catch(Exception ex){
-			Log.d("test","test exception:"+ex.getMessage()); 
+			}
+		} catch (Exception ex) {
+			Log.d("test", "test exception:" + ex.getMessage());
 		}
-		
-		
-		
+
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(com.planb.soda.R.menu.main, menu);
 		return true;
 	}
 
-	
 	public static int getResId(String variableName, Class<?> c) {
-	    try {
-	        java.lang.reflect.Field idField = c.getDeclaredField(variableName);
-	        return idField.getInt(idField);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return -1;
-	    } 
+		try {
+			java.lang.reflect.Field idField = c.getDeclaredField(variableName);
+			return idField.getInt(idField);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
-	
+
 }

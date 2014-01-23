@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressLint("ViewConstructor")
 public class PlaceItemBottomLayout extends RelativeLayout {
@@ -65,7 +66,8 @@ public class PlaceItemBottomLayout extends RelativeLayout {
                     navigation.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                     v.getContext().startActivity(navigation);	
             	}catch(Exception ex){
-            		
+            		Toast toast = Toast.makeText(v.getContext(), "請安裝Google Map，導航功能方能使用。", 1500);
+            		toast.show();
             	}
             	
             	

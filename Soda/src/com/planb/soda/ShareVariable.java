@@ -1,10 +1,16 @@
 package com.planb.soda;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Marker;
 
 public class ShareVariable {
 	 public static String GOOGLE_KEY="AIzaSyCYM1UUnXbgP3eD__x2EjIugNOy-vE3McY";
@@ -12,6 +18,8 @@ public class ShareVariable {
  	 private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
 	 public static Location currentLocation=null;
 	 public static LocationListener listener=null;
+	 public static SupportMapFragment mapFr=null;
+	 public static List<Marker> arrMarker=new ArrayList<Marker>();
 	 public static Location getLocation(LocationManager lm){
 			boolean isGPSEnable= lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
 			if(isGPSEnable){

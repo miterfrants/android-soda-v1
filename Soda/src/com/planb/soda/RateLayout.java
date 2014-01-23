@@ -52,7 +52,7 @@ public class RateLayout extends RelativeLayout {
     }
 	public void setRating(float rate){
 		rateBar.setRating(rate);
-		Log.d("test","test width:" + String.valueOf(rateBar.getVerticalScrollbarWidth()));
+		//Log.d("test","test width:" + String.valueOf(rateBar.getVerticalScrollbarWidth()));
 	}
 
 }
