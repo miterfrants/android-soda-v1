@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		int screenW = getWindowManager().getDefaultDisplay().getWidth();
+		ShareVariable.screenW=screenW;
 		SlideMenu slideMenu = new SlideMenu(this);
 		// setContentView(R.layout.activity_main);
 		setContentView(slideMenu);
@@ -49,29 +50,6 @@ public class MainActivity extends Activity {
 				SlideMenu.LayoutParams.ROLE_SECONDARY_MENU));
 		slideMenu.setSlideDirection(SlideMenu.FLAG_DIRECTION_LEFT);
 
-		// try {
-		// rl.setBackgroundColor(0xFFFFFFFF);
-		// ImageViewEx.setCanAlwaysAnimate(true);
-		// // net.frakbot.imageviewex.ImageViewEx test = new
-		// net.frakbot.imageviewex.ImageViewEx(this.getApplicationContext());
-		// // Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-		// R.drawable.loading);
-		// // ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		// // bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-		// // byte[] bitMapData = stream.toByteArray();
-		// // test.setSource(bitMapData);
-		// // ImageViewEx test= new
-		// ImageViewEx(this.getApplicationContext(),getResources().openRawResource(R.drawable.loading));
-		// RelativeLayout.LayoutParams rlForTest= new
-		// RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		// test.setBackgroundColor(0xFFFF0000);
-		// test.setLayoutParams(rlForTest);
-		// rl.addView(test);
-		//
-		// } catch (Exception e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
 
 		String jsonConfig = "{\"cate\":["
 				+ "{\"name\":\"小吃\",\"keyword\":\"小吃\",\"type\":\"\",\"pic\":\"cate_food\",\"bg\":\"\",\"color\":\"#ffb7dd6c\"},"
@@ -92,7 +70,6 @@ public class MainActivity extends Activity {
 						i);
 				PlaceCateButton btn = new PlaceCateButton(
 						this.getApplicationContext());
-
 				btn.setBackgroundColor(Color.parseColor(item.getString("color")));
 				RelativeLayout.LayoutParams lpForButton = new RelativeLayout.LayoutParams(
 						RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -126,7 +103,9 @@ public class MainActivity extends Activity {
 						v.getContext().startActivity(intentMain);
 					}
 				});
-
+				
+				
+				
 				rl.addView(btn);
 			}
 		} catch (Exception ex) {

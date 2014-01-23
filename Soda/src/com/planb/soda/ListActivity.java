@@ -1,6 +1,12 @@
 package com.planb.soda;
 
 
+import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -13,6 +19,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +33,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +74,7 @@ public class ListActivity extends FragmentActivity {
 	private Button _btnNext=null;
 	private Button _btnPreviouse=null;
 	private Button _btnTakeMeThere =null;
-			
+	public static List<PlaceItem> arrListResult=new ArrayList<PlaceItem>();
 	@Override 
 	protected void onStart(){
 		super.onStart();
@@ -74,8 +82,11 @@ public class ListActivity extends FragmentActivity {
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ShareVariable.arrMarker.clear();
+		arrListResult.clear();
 		super.onCreate(savedInstanceState);
-		
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+	    StrictMode.setThreadPolicy(policy);
 		setContentView(com.planb.soda.R.layout.activity_list);
 		SlideMenu slideMenu =(SlideMenu) this.findViewById(com.planb.soda.R.id.rl_for_activity_list);
 		keyword=getIntent().getStringExtra("keyword");
@@ -98,15 +109,16 @@ public class ListActivity extends FragmentActivity {
 		rlpForBtnGetMore.width=((int) (screenW*0.125));
 		rlpForBtnGetMore.height=((int) (screenW*0.125));
 		rlpForBtnGetMore.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		
 		//peter modify
 		btnGetMore.setTextSize(12);
-		btnGetMore.setVisibility(0);
+		btnGetMore.setVisibility(View.INVISIBLE);
 		btnGetMore.setTextColor(0xFFFFFFFF);
 		btnGetMore.setText("§ó¦h");
 		btnGetMore.setLayoutParams(rlpForBtnGetMore);
 		btnGetMore.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
+		    	RelativeLayout rlList =(RelativeLayout) findViewById(com.planb.soda.R.id.rl_list);
+		    	rlList.removeAllViews();
 		    	getData(false);
 		    }
 		});
@@ -169,7 +181,6 @@ public class ListActivity extends FragmentActivity {
 		_btnTakeMeThere.setTextAlignment(View.TEXT_DIRECTION_LTR);
 		_btnTakeMeThere.setTextColor(0xFFFFFFFF);
 		_btnTakeMeThere.setPadding(0,0,(int) (screenW*0.339062*0.5),0);
-		_btnTakeMeThere.setVisibility(View.INVISIBLE);
 		_btnTakeMeThere.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	try{
@@ -265,6 +276,7 @@ public class ListActivity extends FragmentActivity {
 		Marker marker=ShareVariable.arrMarker.get(selectedMarkerIndex);
 		setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
 		marker.showInfoWindow();
+		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*selectedMarkerIndex)- screenW*0.2));
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 	}
 	public void selectPreviouseMarker(){
@@ -278,6 +290,7 @@ public class ListActivity extends FragmentActivity {
 		Marker marker=ShareVariable.arrMarker.get(selectedMarkerIndex);
 		setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
 		marker.showInfoWindow();
+		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*selectedMarkerIndex) - screenW*0.2));
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 	}
 	public void showButtonGetMore(){
@@ -360,6 +373,7 @@ public class ListActivity extends FragmentActivity {
 			urlTempGet+="&pagetoken="+this.token;
 		}
 		AsyncHttpClient client = new AsyncHttpClient();
+		Log.d("test","test get more:"+urlTempGet);
  		client.get(urlTempGet, new AsyncHttpResponseHandler() {
 		    @Override
 		    public void onSuccess(String response) {
@@ -368,7 +382,6 @@ public class ListActivity extends FragmentActivity {
 		    		JSONObject res=new JSONObject(response);
 		    		generateList(res);
 		    	}catch(Exception ex){
-		    		Log.d("test","test exception occur:"+ex.getMessage());
 		    		ex.printStackTrace();
 		    	}
 		    }
@@ -392,14 +405,10 @@ public class ListActivity extends FragmentActivity {
 	public void generateList(JSONObject res){
 		
 	   RelativeLayout rlList =(RelativeLayout) findViewById(com.planb.soda.R.id.rl_list);
+	   rlList.setBackgroundColor(0xFFcccccc);
 	   try{
 		   String status =res.getString("status");
-		   if(res.has("next_page_token")){
-			   this.token=res.getString("next_page_token");
-			   btnGetMore.setVisibility(1);
-		   }else{
-			   btnGetMore.setVisibility(0);
-		   }
+
 		   if(status.equals("OK")){
 			   if(arrRes !=null && arrRes.length()>0){
 				   JSONArray tempArr=res.getJSONArray("results");
@@ -413,14 +422,10 @@ public class ListActivity extends FragmentActivity {
 			   
 			   for(int i=0;i<arrRes.length();i++){
 				   JSONObject item= arrRes.getJSONObject(i);
+				   JSONObject location=item.getJSONObject("geometry").getJSONObject("location");
 				   PlaceItem btn=new PlaceItem(this.getApplicationContext(),this.getWindow().getWindowManager().getDefaultDisplay().getWidth());
-				   RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-					lpForButton.height=screenW/2;
-					lpForButton.setMargins(0,i*lpForButton.height, 0, 0);
-					btn.setLayoutParams(lpForButton);
 					btn.bottomLayout.title.setText(item.getString("name"));
 					btn.name=item.getString("name");
-					JSONObject location=item.getJSONObject("geometry").getJSONObject("location");
 					btn.lat=Double.parseDouble(location.getString("lat"));
 					btn.lng=Double.parseDouble(location.getString("lng"));
 					btn.address=item.getString("vicinity");
@@ -445,11 +450,38 @@ public class ListActivity extends FragmentActivity {
 														.snippet(btn.address)
 												);
 					ShareVariable.arrMarker.add(marker);
-					rlList.addView(btn);
-					btn.getDist();
-				   
+					arrListResult.add(btn);
+					btn.buildDist();
 			   }
-			  btnGetMore.bringToFront();
+			   ShareVariable.arrMarker.get(0).showInfoWindow();
+			   btnGetMore.bringToFront();
+			   if(res.has("next_page_token")){
+				   this.token=res.getString("next_page_token");
+				   btnGetMore.setVisibility(View.VISIBLE);
+			   }else{
+				   btnGetMore.setVisibility(View.INVISIBLE);
+			   }
+			   Collections.sort(arrListResult, new Comparator<PlaceItem>()  {
+			        @Override
+			        public int compare(PlaceItem s1, PlaceItem s2) {
+			        	if(s1.dist<s2.dist){
+			        		return -1;	
+			        	}else if(s1.dist>s2.dist){
+			        		return 1;
+			        	}else{
+			        		return 0;
+			        	}
+			        }
+			    });
+			   
+			   for(int i=0;i<arrListResult.size();i++){
+				   RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+					lpForButton.height=screenW/2;
+					lpForButton.setMargins(0,i*lpForButton.height, 0, 0);
+					arrListResult.get(i).setLayoutParams(lpForButton);
+					rlList.addView(arrListResult.get(i));
+			   }
+			   
 		   }else{
 			   Log.d("test","test:"+ status);
 		   }

@@ -20,6 +20,7 @@ public class ShareVariable {
 	 public static LocationListener listener=null;
 	 public static SupportMapFragment mapFr=null;
 	 public static List<Marker> arrMarker=new ArrayList<Marker>();
+	 public static int screenW=0;
 	 public static Location getLocation(LocationManager lm){
 			boolean isGPSEnable= lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
 			if(isGPSEnable){

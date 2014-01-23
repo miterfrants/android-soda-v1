@@ -1,10 +1,16 @@
 package com.planb.soda;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URI;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,114 +23,128 @@ import android.widget.ImageView.ScaleType;
 
 @SuppressLint("ViewConstructor")
 public class PlaceItem extends RelativeLayout {
-	public PlaceItemBottomLayout bottomLayout=null;
-	public RateLayout rateLayout=null;
-	public ImageView bg=null;
-	public String address="";
-	public String name="";
-	public double lat=0;
-	public double lng=0;
-	public PlaceItem(Context context,int screenW) {
+	public PlaceItemBottomLayout bottomLayout = null;
+	public RateLayout rateLayout = null;
+	public ImageView bg = null;
+	public String address = "";
+	public String name = "";
+	public double dist = 0;
+	public double lat = 0;
+	public double lng = 0;
+
+	public PlaceItem(Context context, int screenW) {
 		super(context);
-		
+
 		this.setClickable(true);
-		rateLayout= new RateLayout(context,screenW);
-		RelativeLayout.LayoutParams rlpForRateLayout=  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.MATCH_PARENT);
-		rlpForRateLayout.height=(int) (screenW*0.09375);
-		rlpForRateLayout.width=(int) (screenW*0.21875);
-		rlpForRateLayout.setMargins((int) (screenW*0.765625),(int) (screenW*0.29375), 0, 0);
+		rateLayout = new RateLayout(context, screenW);
+		RelativeLayout.LayoutParams rlpForRateLayout = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.WRAP_CONTENT,
+				RelativeLayout.LayoutParams.MATCH_PARENT);
+		rlpForRateLayout.height = (int) (screenW * 0.09375);
+		rlpForRateLayout.width = (int) (screenW * 0.21875);
+		rlpForRateLayout.setMargins((int) (screenW * 0.765625),
+				(int) (screenW * 0.29375), 0, 0);
 		rateLayout.setLayoutParams(rlpForRateLayout);
-		
-		bg= new ImageView(context);
+
+		bg = new ImageView(context);
 		bg.setScaleType(ScaleType.CENTER_CROP);
-		RelativeLayout.LayoutParams rlp=  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+		RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.MATCH_PARENT);
 		bg.setLayoutParams(rlp);
-		
+		bottomLayout = new PlaceItemBottomLayout(this.getContext(), screenW);
+
 		this.addView(bg);
 		this.addView(rateLayout);
-		
-		
-		bottomLayout=new PlaceItemBottomLayout(this.getContext(),screenW);
 		this.addView(bottomLayout);
-		
-		
 		this.setBackgroundColor(0xFFCCCCCC);
-		
 		// TODO Auto-generated constructor stub
 	}
-	
-    @Override
-    public void dispatchDraw(Canvas canvas) {
-    	super.dispatchDraw(canvas);
-    	
-		RelativeLayout.LayoutParams rlpForBottomLayout=  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlpForBottomLayout.height= (int) (this.getWidth()*0.09375);
-		rlpForBottomLayout.setMargins(0, this.getHeight()-rlpForBottomLayout.height, 0, 0);
+
+	@Override
+	public void dispatchDraw(Canvas canvas) {
+		super.dispatchDraw(canvas);
+
+		RelativeLayout.LayoutParams rlpForBottomLayout = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		rlpForBottomLayout.height = (int) (this.getWidth() * 0.09375);
+		rlpForBottomLayout.setMargins(0, this.getHeight()
+				- rlpForBottomLayout.height, 0, 0);
 		bottomLayout.setLayoutParams(rlpForBottomLayout);
-		
-    }
-    
-    public void getDist(){
-    	AsyncHttpClient client = new AsyncHttpClient();
-    	
-    	LocationManager lm=(LocationManager) this.getContext().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-    	Location loc=ShareVariable.getLocation(lm);
-    	Location distLoc=new Location("");
-    	distLoc.setLatitude(lat);
-    	distLoc.setLongitude(lng);
-    	final float defaultDistance =distLoc.distanceTo(loc);
-    	//Log.d("test","test dist url:"+ "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+String.valueOf(loc.getLatitude())+","+String.valueOf(loc.getLongitude())+"&destinations="+String.valueOf(lat)+","+String.valueOf(lng)+"&mode=walk&sensor=false&language=zh-TW");
-    	client.get("https://maps.googleapis.com/maps/api/distancematrix/json?origins="+String.valueOf(loc.getLatitude())+","+String.valueOf(loc.getLongitude())+"&destinations="+String.valueOf(lat)+","+String.valueOf(lng)+"&mode=walk&sensor=false&language=zh-TW", new AsyncHttpResponseHandler() {
-		    @Override
-		    public void onSuccess(String response) {
-		    	try{
-		    		//Log.d("test","test:"+response);
-		    		JSONObject res=new JSONObject(response);
-		    		address=res.getString("destination_addresses");
-		    		JSONArray arrRows =res.getJSONArray("rows");
-		    		if(arrRows.length()>0){
-		    			JSONArray arrElements =arrRows.getJSONObject(0).getJSONArray("elements");
-		    			if(arrElements.length()>0){
-		    				JSONObject element=arrElements.getJSONObject(0);
-		    				bottomLayout.dist.setText(element.getJSONObject("distance").getString("text"));
-		    			}else{
-		    				bottomLayout.dist.setText(getDistText(defaultDistance));
-		    			}
-		    		}else{
-		    			bottomLayout.dist.setText(getDistText(defaultDistance));
-		    		}
-		    		//this.bottomLayout.dist.setText();
-		    	}catch(Exception ex){
-		    		try{
-		    			bottomLayout.dist.setText(getDistText(defaultDistance));
-		    		}catch(Exception ex1){
-		    			Log.d("test","exception:"+ex1.getMessage());
-		    			ex1.printStackTrace();
-		    		}
-		    		
-		    	}
-		    }
-		    
-		    @Override
-		    public void onFailure(Throwable e, String response){
-		    	bottomLayout.dist.setText(getDistText(defaultDistance));
-		    	Log.d("test","test async get google api error:"+ e.getMessage());
-		    }
-		    
-		    
-		    
-		    
-		});
-    	
-    }
-    public String getDistText(float dist){
-    	if(dist>1000){
-    		float res=Math.round(Math.round(dist/1000)*100)/100;
-    		return String.valueOf(res) + " そ┰";
-    	}else{
-    		float res=Math.round(dist*100)/100;
-    		return String.valueOf(res) + " そへ";
-    	}
-    }
+
+	}
+
+	public void buildDist() {
+		LocationManager lm = (LocationManager) this.getContext()
+				.getApplicationContext()
+				.getSystemService(Context.LOCATION_SERVICE);
+		Location loc = ShareVariable.getLocation(lm);
+		Location distLoc = new Location("");
+		distLoc.setLatitude(lat);
+		distLoc.setLongitude(lng);
+		final float defaultDistance = distLoc.distanceTo(loc);
+		dist = distLoc.distanceTo(loc);
+		bottomLayout.dist.setText(getDistText(defaultDistance));
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpGet request = new HttpGet();
+			URI website = new URI(
+					"https://maps.googleapis.com/maps/api/distancematrix/json?origins="
+							+ String.valueOf(loc.getLatitude()) + ","
+							+ String.valueOf(loc.getLongitude())
+							+ "&destinations=" + String.valueOf(lat) + ","
+							+ String.valueOf(lng)
+							+ "&mode=walk&sensor=false&language=zh-TW");
+			request.setURI(website);
+			HttpResponse response = httpclient.execute(request);
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+
+			StringBuilder builder = new StringBuilder();
+			String aux = "";
+			while ((aux = in.readLine()) != null) {
+				builder.append(aux);
+			}
+			String result = builder.toString();
+
+			JSONObject res = new JSONObject(result);
+			address = res.getString("destination_addresses");
+			JSONArray arrRows = res.getJSONArray("rows");
+			if (arrRows.length() > 0) {
+				JSONArray arrElements = arrRows.getJSONObject(0).getJSONArray(
+						"elements");
+				if (arrElements.length() > 0) {
+					JSONObject element = arrElements.getJSONObject(0);
+					dist = Float.parseFloat(element.getJSONObject("distance")
+							.getString("value"));
+					bottomLayout.dist.setText(getDistText(Float
+							.parseFloat(element.getJSONObject("distance")
+									.getString("value"))));
+					// bottomLayout.dist.setText("a" + String.valueOf(dist));
+				} else {
+					bottomLayout.dist.setText(getDistText(defaultDistance));
+					// bottomLayout.dist.setText(String.valueOf(dist));
+				}
+			} else {
+				bottomLayout.dist.setText(getDistText(defaultDistance));
+				// bottomLayout.dist.setText(String.valueOf(dist));
+			}
+		} catch (Exception ex) {
+			bottomLayout.dist.setText(getDistText(defaultDistance));
+			// bottomLayout.dist.setText(String.valueOf(dist));
+		}
+		// Log.d("test","test build finish");
+	}
+
+	public String getDistText(float dist) {
+		if (dist > 1000) {
+			float res = Math.round(Math.round(dist / 1000) * 100) / 100;
+			return String.valueOf(res) + " そ┰";
+		} else {
+			int res =(int) Math.round(dist);
+			return String.valueOf(res) + " そへ";
+		}
+	}
 
 }
