@@ -15,7 +15,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import com.aretha.slidemenu.*;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
 import org.json.*;
 
 //import net.frakbot.imageviewex.ImageViewEx;
@@ -27,28 +28,30 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		int screenW = getWindowManager().getDefaultDisplay().getWidth();
+		int screenH = getWindowManager().getDefaultDisplay().getHeight();
 		ShareVariable.screenW=screenW;
-		SlideMenu slideMenu = new SlideMenu(this);
+		ShareVariable.screenH=screenH;
+		SlidingMenu slideMenu = new SlidingMenu(this);
 		// setContentView(R.layout.activity_main);
 		setContentView(slideMenu);
 		ScrollView sc = new ScrollView(this);
 
 		RelativeLayout rl = new RelativeLayout(this);
 		sc.addView(rl);
-
-		slideMenu.addView(sc, new SlideMenu.LayoutParams(
-				SlideMenu.LayoutParams.MATCH_PARENT,
-				SlideMenu.LayoutParams.MATCH_PARENT,
-				SlideMenu.LayoutParams.ROLE_CONTENT));
-
-		slideMenu
-				.setSlideDirection(com.aretha.slidemenu.SlideMenu.STATE_OPEN_RIGHT);
+		slideMenu.setContent(sc);
+//		slideMenu.addView(sc, new SlideMenu.LayoutParams(
+//				SlideMenu.LayoutParams.MATCH_PARENT,
+//				SlideMenu.LayoutParams.MATCH_PARENT,
+//				SlideMenu.LayoutParams.ROLE_CONTENT));
+//
+//		slideMenu
+//				.setSlideDirection(com.aretha.slidemenu.SlideMenu.STATE_OPEN_RIGHT);
 
 		View view = new View(this);
-		slideMenu.addView(view, new SlideMenu.LayoutParams(
-				(int) (screenW * 0.9), SlideMenu.LayoutParams.MATCH_PARENT,
-				SlideMenu.LayoutParams.ROLE_SECONDARY_MENU));
-		slideMenu.setSlideDirection(SlideMenu.FLAG_DIRECTION_LEFT);
+//		slideMenu.addView(view, new SlideMenu.LayoutParams(
+//				(int) (screenW * 0.9), SlideMenu.LayoutParams.MATCH_PARENT,
+//				SlideMenu.LayoutParams.ROLE_SECONDARY_MENU));
+//		slideMenu.setSlideDirection(SlideMenu.FLAG_DIRECTION_LEFT);
 
 
 		String jsonConfig = "{\"cate\":["

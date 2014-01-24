@@ -5,7 +5,7 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="D:/Project/android-sdk/extras/android/support/v4/android-support-v4.jar"/>
-	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="lib" path="D:/Project/libs/jar/android-async-http-1.4.4.jar"/>
+	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

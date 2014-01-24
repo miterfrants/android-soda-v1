@@ -46,7 +46,7 @@ public class ScrollViewForPlaceItem extends PullToRefreshScrollView{
             }
             
             if(y-oldy>0){
-            	if(!la.isShowingGetMore){
+            	if(!la.isShowingGetMore && la.token.length()>0){
             		la.showButtonGetMore();
             	}
             }

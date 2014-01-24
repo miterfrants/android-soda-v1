@@ -39,7 +39,6 @@ import android.widget.Toast;
 
 import org.json.*;
 
-import com.aretha.slidemenu.SlideMenu;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.loopj.android.http.*;
 import com.google.android.gms.maps.CameraUpdate;
@@ -52,12 +51,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.maps.*;
-
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 @SuppressLint("InlinedApi")
 public class ListActivity extends FragmentActivity {
-	private String token="";
+	public String token="";
 	private int screenW=0;
 	private Button btnGetMore;
 	private String urlGet;
@@ -78,7 +76,6 @@ public class ListActivity extends FragmentActivity {
 	@Override 
 	protected void onStart(){
 		super.onStart();
-		hideButtonGetMore();
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +85,14 @@ public class ListActivity extends FragmentActivity {
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 	    StrictMode.setThreadPolicy(policy);
 		setContentView(com.planb.soda.R.layout.activity_list);
-		SlideMenu slideMenu =(SlideMenu) this.findViewById(com.planb.soda.R.id.rl_for_activity_list);
+		LocationManager lm=(LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
+		currentLocation=ShareVariable.getLocation(lm);
+		if(currentLocation==null){
+			Toast toast = Toast.makeText(this, "請先開啟 GPS 定位功能。", 1000);
+    		toast.show();
+			return;
+		}
+		SlidingMenu slideMenu =(SlidingMenu) this.findViewById(com.planb.soda.R.id.rl_for_activity_list);
 		keyword=getIntent().getStringExtra("keyword");
 		type=getIntent().getStringExtra("type");
 		otherSource=getIntent().getStringExtra("otherSource");
@@ -99,18 +103,16 @@ public class ListActivity extends FragmentActivity {
 				+ "key="+ShareVariable.GOOGLE_KEY+"&rankBy=prominence&types="+ type+"&language=zh-TW";
 		
 		screenW=getWindowManager().getDefaultDisplay().getWidth();
-		//screenH=getWindowManager().getDefaultDisplay().getHeight();
-		
-		
-		//btnGetMore=(Button) this.findViewById(R.id.btn_get_more);
 		btnGetMore=new Button(this);
 		btnGetMore.setBackgroundResource(com.planb.soda.R.drawable.circle_button);
 		RelativeLayout.LayoutParams rlpForBtnGetMore= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForBtnGetMore.width=((int) (screenW*0.125));
 		rlpForBtnGetMore.height=((int) (screenW*0.125));
+		rlpForBtnGetMore.bottomMargin=10;
+		rlpForBtnGetMore.leftMargin=10;
 		rlpForBtnGetMore.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		//peter modify
-		btnGetMore.setTextSize(12);
+		btnGetMore.setTextSize(10);
 		btnGetMore.setVisibility(View.INVISIBLE);
 		btnGetMore.setTextColor(0xFFFFFFFF);
 		btnGetMore.setText("更多");
@@ -128,9 +130,10 @@ public class ListActivity extends FragmentActivity {
 		this.scForPI =(ScrollViewForPlaceItem) LayoutInflater.from(this).inflate(com.planb.soda.R.layout.scroll_view_for_place_item,null);
 		rlForContent.addView(scForPI);
 		scForPI.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
-		slideMenu.addView(rlForContent, new SlideMenu.LayoutParams(
-				SlideMenu.LayoutParams.MATCH_PARENT, SlideMenu.LayoutParams.MATCH_PARENT,
-				SlideMenu.LayoutParams.ROLE_CONTENT));
+//		slideMenu.addView(rlForContent, new SlideMenu.LayoutParams(
+//				SlideMenu.LayoutParams.MATCH_PARENT, SlideMenu.LayoutParams.MATCH_PARENT,
+//				SlideMenu.LayoutParams.ROLE_CONTENT));
+		slideMenu.setContent(rlForContent);
 		
 		RelativeLayout rightView = (RelativeLayout)  LayoutInflater.from(this).inflate(com.planb.soda.R.layout.right_map,null);
 		
@@ -210,23 +213,31 @@ public class ListActivity extends FragmentActivity {
 		                .findFragmentById(R.id.map);
 		map=myMAPF.getMap();
 		myMAPF.getMap().getUiSettings().setZoomControlsEnabled(false);
-		LocationManager lm=(LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
-		currentLocation=ShareVariable.getLocation(lm);
-		if(currentLocation==null){
-			Log.d("test","test current location is null");
-			return;
-		}
 		setMapCenter(currentLocation.getLatitude(),currentLocation.getLongitude(),15);
 	    //map.setOnInfoWindowClickListener(getMarkerClickListener());
 	    map.setOnMarkerClickListener(getMarkerClickListener());
 	    map.setOnMapClickListener(getMapClickListener());
 		
 		//rlForRightMap.addView(btn);
-		slideMenu.addView(rightView, new SlideMenu.LayoutParams(
-				(int) (screenW*0.9), SlideMenu.LayoutParams.MATCH_PARENT,
-				SlideMenu.LayoutParams.ROLE_SECONDARY_MENU));
-		
-		slideMenu.setSlideDirection(SlideMenu.FLAG_DIRECTION_LEFT);
+//		slideMenu.addView(rightView, new SlideMenu.LayoutParams(
+//				(int) (screenW*0.9), SlideMenu.LayoutParams.MATCH_PARENT,
+//				SlideMenu.LayoutParams.ROLE_SECONDARY_MENU));
+//	    View v=new View(this);
+//	    v.setBackgroundColor(0xFFFF0000);
+//	    v.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
+	    RelativeLayout.LayoutParams rlpForRightView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+	    rlpForRightView.width=(int) (ShareVariable.screenW*0.9);
+	    rlpForRightView.height=ShareVariable.screenH;
+	    rightView.setLayoutParams(rlpForRightView);
+	    
+	    slideMenu.setMenu(rightView);
+	    //Log.d("test","test class:"+ String.valueOf(slideMenu.getSecondaryMenu().getHeight()));
+		//slideMenu.setSlideDirection(SlideMenu.FLAG_DIRECTION_LEFT);
+	    slideMenu.setMode(SlidingMenu.RIGHT);
+	    slideMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+	    slideMenu.setBehindWidth((int) (ShareVariable.screenW*0.9));
+	    
+	    		
 		
 		ActionBar bar=getActionBar();
 		bar.setDisplayHomeAsUpEnabled(true);
@@ -442,22 +453,13 @@ public class ListActivity extends FragmentActivity {
 						btn.bg.setTag(url);
 						new DownloadImagesTask().execute(btn.bg);
 					}
-					
-					LatLng locate=new LatLng(btn.lat,btn.lng);
-					Marker marker =map.addMarker(new MarkerOptions()
-														.position(locate)
-														.title(btn.name)
-														.snippet(btn.address)
-												);
-					ShareVariable.arrMarker.add(marker);
 					arrListResult.add(btn);
 					btn.buildDist();
 			   }
-			   ShareVariable.arrMarker.get(0).showInfoWindow();
+			   
 			   btnGetMore.bringToFront();
 			   if(res.has("next_page_token")){
 				   this.token=res.getString("next_page_token");
-				   btnGetMore.setVisibility(View.VISIBLE);
 			   }else{
 				   btnGetMore.setVisibility(View.INVISIBLE);
 			   }
@@ -476,12 +478,20 @@ public class ListActivity extends FragmentActivity {
 			   
 			   for(int i=0;i<arrListResult.size();i++){
 				   RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+				   
 					lpForButton.height=screenW/2;
 					lpForButton.setMargins(0,i*lpForButton.height, 0, 0);
 					arrListResult.get(i).setLayoutParams(lpForButton);
+					LatLng locate=new LatLng(arrListResult.get(i).lat,arrListResult.get(i).lng);
+					Marker marker =map.addMarker(new MarkerOptions()
+														.position(locate)
+														.title(arrListResult.get(i).name)
+														.snippet(arrListResult.get(i).address)
+												);
+					ShareVariable.arrMarker.add(marker);
 					rlList.addView(arrListResult.get(i));
 			   }
-			   
+			   ShareVariable.arrMarker.get(0).showInfoWindow();
 		   }else{
 			   Log.d("test","test:"+ status);
 		   }
