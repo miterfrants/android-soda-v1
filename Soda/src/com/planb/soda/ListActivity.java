@@ -144,6 +144,8 @@ public class ListActivity extends FragmentActivity {
 		this.scForPI =(ScrollViewForPlaceItem) LayoutInflater.from(this).inflate(com.planb.soda.R.layout.scroll_view_for_place_item,null);
 		rlForContent.addView(scForPI);
 		scForPI.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
+		scForPI.setPersistentDrawingCache(ViewGroup.PERSISTENT_SCROLLING_CACHE);
+		scForPI.setAlwaysDrawnWithCacheEnabled(true);
 //		slideMenu.addView(rlForContent, new SlideMenu.LayoutParams(
 //				SlideMenu.LayoutParams.MATCH_PARENT, SlideMenu.LayoutParams.MATCH_PARENT,
 //				SlideMenu.LayoutParams.ROLE_CONTENT));

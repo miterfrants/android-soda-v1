@@ -2,9 +2,12 @@ package com.planb.soda;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ScrollView;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.os.Debug;
+
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 public class ScrollViewForPlaceItem extends PullToRefreshScrollView{
@@ -50,6 +53,7 @@ public class ScrollViewForPlaceItem extends PullToRefreshScrollView{
             		la.showButtonGetMore();
             	}
             }
+
         }
         
 	}
