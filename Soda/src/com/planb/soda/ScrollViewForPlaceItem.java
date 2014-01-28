@@ -40,14 +40,14 @@ public class ScrollViewForPlaceItem extends PullToRefreshScrollView{
             int _screenW = ShareVariable.screenW;
             final ListActivity la = (ListActivity) this.getContext();
             if(y<_screenW*0.4){
-            	ShareVariable.arrMarker.get(0).showInfoWindow();
             	la.selectedMarkerIndex=0;
             }else{
             	int currentIndex=(int) Math.floor((y +_screenW*0.4)/(_screenW/2));
-    			ShareVariable.arrMarker.get(currentIndex).showInfoWindow();
     			la.selectedMarkerIndex=currentIndex;
             }
-            
+        	if(ShareVariable.arrMarker.size()>0){
+        		ShareVariable.arrMarker.get(la.selectedMarkerIndex).showInfoWindow();	
+        	}            
             if(y-oldy>0){
             	if(!la.isShowingGetMore && la.token.length()>0){
             		la.showButtonGetMore();

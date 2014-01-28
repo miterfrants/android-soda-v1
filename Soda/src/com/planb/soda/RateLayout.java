@@ -23,20 +23,16 @@ public class RateLayout extends RelativeLayout {
 		    inflater.inflate(com.planb.soda.R.layout.rate_layout, this, true);
 		    
 		rateBar =(RatingBar) ((RelativeLayout) this.getChildAt(0)).getChildAt(1);
-		rateBar.setRating(0);
+		rateBar.setRating((float) 0.00);
 		RelativeLayout.LayoutParams rlpForRateBar= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForRateBar.addRule(RelativeLayout.CENTER_VERTICAL);
 		//rlpForRateBar.setMargins((int) (screenW*0.01641666),(int) (screenW*0.00501666),0,0);
-		rlpForRateBar.leftMargin=(int) (ShareVariable.screenW * 0.016416666);
+		rlpForRateBar.leftMargin=(int) (ShareVariable.screenW * 0.022416666);
 		if(ShareVariable.screenW==1080){
 			rlpForRateBar.height=80;
 			rlpForRateBar.width=80;
-		}else if(ShareVariable.screenW==720){
-			rlpForRateBar.height=60;
-			rlpForRateBar.width=60;	
 		}else{
-			rlpForRateBar.height= (int) (ShareVariable.screenW * 0.0833333);
-			rlpForRateBar.width= (int) (ShareVariable.screenW * 0.0833333);
+			//no config adapter container
 		}
 		
 		rateBar.setLayoutParams(rlpForRateBar);
@@ -50,7 +46,7 @@ public class RateLayout extends RelativeLayout {
 		if(ShareVariable.screenW==1080){
 			txtRate.setTextSize(26);
 			rlpForTxtRate.rightMargin=(int) (screenW*0.01041666);
-		}else if(ShareVariable.screenW==720){
+		}else if(ShareVariable.screenW==720 || ShareVariable.screenW==768){
 			txtRate.setTextSize(26);
 			rlpForTxtRate.rightMargin=(int) (screenW*0.01041666);
 		}else{

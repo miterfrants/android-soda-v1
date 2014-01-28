@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,8 +94,7 @@ public class ListActivity extends FragmentActivity {
 		GifMovieView ldImg=new GifMovieView(this);
 		ldImg.setMovieResource(R.drawable.loading);
 		RelativeLayout.LayoutParams rlpForImg= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlpForImg.topMargin=(int) ((ShareVariable.screenH-ldImg.getHeight())/2);
-		rlpForImg.leftMargin = (int) ((ShareVariable.screenW-ldImg.getWidth())/2) ;
+		rlpForImg.addRule(RelativeLayout.CENTER_IN_PARENT);
 		ldImg.setLayoutParams(rlpForImg);
 		rlForContent.addView(ldImg);
 
@@ -128,10 +128,10 @@ public class ListActivity extends FragmentActivity {
 		//peter modify
 		if(ShareVariable.screenW==1080){
 			btnGetMore.setTextSize(10);
-		}else if(ShareVariable.screenW==720){
+		}else if(ShareVariable.screenW==720 || ShareVariable.screenW==768){
 			btnGetMore.setTextSize(10);	
 		}else{
-			btnGetMore.setTextSize((int) (screenW * 0.01388888));
+			btnGetMore.setTextSize((int) (screenW * 0.01688888));
 		}
 		
 		btnGetMore.setVisibility(View.INVISIBLE);
@@ -153,11 +153,7 @@ public class ListActivity extends FragmentActivity {
 		scForPI.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
 		scForPI.setPersistentDrawingCache(ViewGroup.PERSISTENT_SCROLLING_CACHE);
 		scForPI.setAlwaysDrawnWithCacheEnabled(true);
-//		slideMenu.addView(rlForContent, new SlideMenu.LayoutParams(
-//				SlideMenu.LayoutParams.MATCH_PARENT, SlideMenu.LayoutParams.MATCH_PARENT,
-//				SlideMenu.LayoutParams.ROLE_CONTENT));
 		slideMenu.setContent(rlForContent);
-		
 		RelativeLayout rightView = (RelativeLayout)  LayoutInflater.from(this).inflate(com.planb.soda.R.layout.right_map,null);
 		
 		//map
@@ -202,11 +198,11 @@ public class ListActivity extends FragmentActivity {
 		rlForMapTakeMeThereButton.rightMargin=(int) (screenW*0.0625);
 		_btnTakeMeThere.setLayoutParams(rlForMapTakeMeThereButton);
 		_btnTakeMeThere.setBackgroundResource(R.drawable.nav_btn);
-		_btnTakeMeThere.setText("導航");
+		_btnTakeMeThere.setText("導 航");
 		//尺寸調整
 		if(ShareVariable.screenW==1080){
 			_btnTakeMeThere.setTextSize(20);
-		}else if(ShareVariable.screenW==720){
+		}else if(ShareVariable.screenW==720 || ShareVariable.screenW==768){
 			_btnTakeMeThere.setTextSize(38);
 		}
 		
@@ -241,22 +237,17 @@ public class ListActivity extends FragmentActivity {
 		final SupportMapFragment myMAPF = (SupportMapFragment) myFM
 		                .findFragmentById(R.id.map);
 		map=myMAPF.getMap();
-		if(map==null){
-			Log.d("test","test");
+		if(map!=null){
+			myMAPF.getMap().getUiSettings().setZoomControlsEnabled(false);
+			setMapCenter(currentLocation.getLatitude(),currentLocation.getLongitude(),15);
+		    map.setOnMarkerClickListener(getMarkerClickListener());
+		    map.setOnMapClickListener(getMapClickListener());
+		}else{
+			Toast toast = Toast.makeText(this, "無法使用您的Google Map，麻煩您更新。", 1000);
+    		toast.show();
 		}
-		myMAPF.getMap().getUiSettings().setZoomControlsEnabled(false);
-		setMapCenter(currentLocation.getLatitude(),currentLocation.getLongitude(),15);
-	    //map.setOnInfoWindowClickListener(getMarkerClickListener());
-	    map.setOnMarkerClickListener(getMarkerClickListener());
-	    map.setOnMapClickListener(getMapClickListener());
 		
-		//rlForRightMap.addView(btn);
-//		slideMenu.addView(rightView, new SlideMenu.LayoutParams(
-//				(int) (screenW*0.9), SlideMenu.LayoutParams.MATCH_PARENT,
-//				SlideMenu.LayoutParams.ROLE_SECONDARY_MENU));
-//	    View v=new View(this);
-//	    v.setBackgroundColor(0xFFFF0000);
-//	    v.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
+		
 	    RelativeLayout.LayoutParams rlpForRightView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 	    rlpForRightView.width=(int) (ShareVariable.screenW*0.9);
 	    rlpForRightView.height=ShareVariable.screenH;
@@ -532,15 +523,19 @@ public class ListActivity extends FragmentActivity {
 							lpForButton.setMargins(0,i*lpForButton.height, 0, 0);
 							arrListResult.get(i).setLayoutParams(lpForButton);
 							LatLng locate=new LatLng(arrListResult.get(i).lat,arrListResult.get(i).lng);
-							Marker marker =map.addMarker(new MarkerOptions()
-																.position(locate)
-																.title(arrListResult.get(i).name)
-																.snippet(arrListResult.get(i).address)
-														);
-							ShareVariable.arrMarker.add(marker);
+							if(map != null){
+								Marker marker =map.addMarker(new MarkerOptions()
+																	.position(locate)
+																	.title(arrListResult.get(i).name)
+																	.snippet(arrListResult.get(i).address)
+															);
+								ShareVariable.arrMarker.add(marker);
+							}
 							rlList.addView(arrListResult.get(i));
 					   }
-					   ShareVariable.arrMarker.get(0).showInfoWindow();
+					   if(ShareVariable.arrMarker.size()>0){
+						   ShareVariable.arrMarker.get(0).showInfoWindow();
+					   }
 				   }
 			   });
 			   

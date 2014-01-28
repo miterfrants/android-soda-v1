@@ -26,7 +26,7 @@ public class PlaceItemBottomLayout extends RelativeLayout {
 		title=new TextView(context);
 		if(ShareVariable.screenW==1080){
 			title.setTextSize(24);
-		}else if(ShareVariable.screenW==720){
+		}else if(ShareVariable.screenW==720 || ShareVariable.screenW==768){
 			title.setTextSize(24);	
 		}else{
 			title.setTextSize((int) (ShareVariable.screenW*0.0347222));
@@ -36,7 +36,9 @@ public class PlaceItemBottomLayout extends RelativeLayout {
     	//title set position and view
     	double titleW=screenW*0.625;
 		RelativeLayout.LayoutParams rlpForTitle=  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlpForTitle.setMargins((int) (screenW-titleW),0,(int) (screenW*0.015625),0);
+		rlpForTitle.addRule(RelativeLayout.CENTER_IN_PARENT);
+		rlpForTitle.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		rlpForTitle.rightMargin=(int) (screenW*0.015625);
 		rlpForTitle.width=(int) titleW;
 		title.setLayoutParams(rlpForTitle);
 		this.addView(title);
@@ -45,7 +47,7 @@ public class PlaceItemBottomLayout extends RelativeLayout {
 		dist=new TextView(context);
 		if(ShareVariable.screenW==1080){
 			dist.setTextSize(18);
-		}else if(ShareVariable.screenW==720){
+		}else if(ShareVariable.screenW==720 || ShareVariable.screenW==768){
 			dist.setTextSize(18);	
 		}else{
 			dist.setTextSize((int) (ShareVariable.screenW*0.025));
