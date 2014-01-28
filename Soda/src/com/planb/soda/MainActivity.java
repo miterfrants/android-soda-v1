@@ -3,6 +3,10 @@ package com.planb.soda;
 //import java.io.ByteArrayOutputStream;
 //import java.io.InputStream;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -15,8 +19,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import org.json.*;
 
 //import net.frakbot.imageviewex.ImageViewEx;
@@ -35,25 +39,9 @@ public class MainActivity extends Activity {
 		// setContentView(R.layout.activity_main);
 		setContentView(slideMenu);
 		ScrollView sc = new ScrollView(this);
-
 		RelativeLayout rl = new RelativeLayout(this);
 		sc.addView(rl);
 		slideMenu.setContent(sc);
-//		slideMenu.addView(sc, new SlideMenu.LayoutParams(
-//				SlideMenu.LayoutParams.MATCH_PARENT,
-//				SlideMenu.LayoutParams.MATCH_PARENT,
-//				SlideMenu.LayoutParams.ROLE_CONTENT));
-//
-//		slideMenu
-//				.setSlideDirection(com.aretha.slidemenu.SlideMenu.STATE_OPEN_RIGHT);
-
-		View view = new View(this);
-//		slideMenu.addView(view, new SlideMenu.LayoutParams(
-//				(int) (screenW * 0.9), SlideMenu.LayoutParams.MATCH_PARENT,
-//				SlideMenu.LayoutParams.ROLE_SECONDARY_MENU));
-//		slideMenu.setSlideDirection(SlideMenu.FLAG_DIRECTION_LEFT);
-
-
 		String jsonConfig = "{\"cate\":["
 				+ "{\"name\":\"小吃\",\"keyword\":\"小吃\",\"type\":\"\",\"pic\":\"cate_food\",\"bg\":\"\",\"color\":\"#ffb7dd6c\"},"
 				+ "{\"name\":\"景點\",\"keyword\":\"旅遊景點\",\"type\":\"\",\"pic\":\"cate_attraction\",\"bg\":\"tourist-attraction-gray-640x320\",\"color\":\"#ffabd156\"},"
@@ -64,7 +52,6 @@ public class MainActivity extends Activity {
 				+ "{\"name\":\"加油站\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_gas\",\"bg\":\"hotel-gray-640x320.png\",\"color\":\"#ffb7dd6c\",\"other-source\":\"/controller/mobile/place.aspx?action=get-gas\"},"
 				+ "{\"name\":\"租車\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_rental\",\"bg\":\"hotel-gray-640x320.png\",\"color\":\"#ffabd156\",\"other-source\":\"/controller/mobile/place.aspx?action=get-rental\"}"
 				+ "]}";
-
 		try {
 			JSONObject config = new JSONObject(jsonConfig);
 
@@ -106,15 +93,11 @@ public class MainActivity extends Activity {
 						v.getContext().startActivity(intentMain);
 					}
 				});
-				
-				
-				
 				rl.addView(btn);
 			}
 		} catch (Exception ex) {
 			Log.d("test", "test exception:" + ex.getMessage());
-		}
-
+		}		
 	}
 
 	@Override

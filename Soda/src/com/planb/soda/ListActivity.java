@@ -72,11 +72,13 @@ public class ListActivity extends FragmentActivity {
 	private Button _btnNext=null;
 	private Button _btnPreviouse=null;
 	private Button _btnTakeMeThere =null;
+	public GifMovieView ldImg=null;
 	public static List<PlaceItem> arrListResult=new ArrayList<PlaceItem>();
 	@Override 
 	protected void onStart(){
 		super.onStart();
 	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		ShareVariable.arrMarker.clear();
@@ -85,6 +87,18 @@ public class ListActivity extends FragmentActivity {
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 	    StrictMode.setThreadPolicy(policy);
 		setContentView(com.planb.soda.R.layout.activity_list);
+		rlForContent= new RelativeLayout(this);
+		
+		//loading bar 
+		GifMovieView ldImg=new GifMovieView(this);
+		ldImg.setMovieResource(R.drawable.loading);
+		RelativeLayout.LayoutParams rlpForImg= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+		rlpForImg.topMargin=(int) ((ShareVariable.screenH-ldImg.getHeight())/2);
+		rlpForImg.leftMargin = (int) ((ShareVariable.screenW-ldImg.getWidth())/2) ;
+		ldImg.setLayoutParams(rlpForImg);
+		rlForContent.addView(ldImg);
+
+		
 		LocationManager lm=(LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
 		currentLocation=ShareVariable.getLocation(lm);
 		if(currentLocation==null){
@@ -96,7 +110,7 @@ public class ListActivity extends FragmentActivity {
 		keyword=getIntent().getStringExtra("keyword");
 		type=getIntent().getStringExtra("type");
 		otherSource=getIntent().getStringExtra("otherSource");
-		rlForContent= new RelativeLayout(this);
+		
 		rlForContent.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
 		urlGet="https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
 				+ "location={lat},{lng}&radius=500&keyword="+keyword+"&sensor=false&"
@@ -242,8 +256,19 @@ public class ListActivity extends FragmentActivity {
 		ActionBar bar=getActionBar();
 		bar.setDisplayHomeAsUpEnabled(true);
 		bar.setTitle("Soda | "+getIntent().getStringExtra("title"));
-
-		getData(true);
+		Thread thread = new Thread()
+		{
+		    @Override
+		    public void run() {
+		        try {
+		            getData(true);
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
+		    }
+		};
+		thread.start();
+		//getData(true);
 	}
 
 	public OnMarkerClickListener getMarkerClickListener()
@@ -368,15 +393,15 @@ public class ListActivity extends FragmentActivity {
 		btnGetMore.startAnimation(animSet);
 	}
 	public void getData(boolean isNew){
+		Log.d("test","test getData:true");
 		if(isNew){
 			this.token="";
 		}
-		
 		if(currentLocation ==  null){
 			//peter modify pop up
 			//Log.d("test","test: location is null");
-			return;
 			//Location is null
+			return;
 		};
 		String urlTempGet =urlGet.replace("{lat}",String.valueOf(currentLocation.getLatitude())).replace("{lng}",String.valueOf( currentLocation.getLongitude()));
 		if(this.token.length()>0){
@@ -403,23 +428,17 @@ public class ListActivity extends FragmentActivity {
 		});
 	}
 	public void setMapCenter(double lat,double lng,int zoomLevel){
-		CameraUpdate center=
-		        CameraUpdateFactory.newLatLng(new LatLng(lat,
-		                                                 lng));
-		    CameraUpdate zoom=CameraUpdateFactory.zoomTo(zoomLevel);
-		    
-	    //map.moveCamera(center);
+		CameraUpdate center=CameraUpdateFactory.newLatLng(new LatLng(lat,lng));
+	    CameraUpdate zoom=CameraUpdateFactory.zoomTo(zoomLevel);
 		map.moveCamera(zoom);
 	    map.animateCamera(center,280,null);
 	    
 	}
-	public void generateList(JSONObject res){
-		
-	   RelativeLayout rlList =(RelativeLayout) findViewById(com.planb.soda.R.id.rl_list);
-	   rlList.setBackgroundColor(0xFFcccccc);
+	public void generateList(final JSONObject res){
+	   
 	   try{
+		   //data prepare
 		   String status =res.getString("status");
-
 		   if(status.equals("OK")){
 			   if(arrRes !=null && arrRes.length()>0){
 				   JSONArray tempArr=res.getJSONArray("results");
@@ -456,13 +475,7 @@ public class ListActivity extends FragmentActivity {
 					arrListResult.add(btn);
 					btn.buildDist();
 			   }
-			   
-			   btnGetMore.bringToFront();
-			   if(res.has("next_page_token")){
-				   this.token=res.getString("next_page_token");
-			   }else{
-				   btnGetMore.setVisibility(View.INVISIBLE);
-			   }
+
 			   Collections.sort(arrListResult, new Comparator<PlaceItem>()  {
 			        @Override
 			        public int compare(PlaceItem s1, PlaceItem s2) {
@@ -476,22 +489,43 @@ public class ListActivity extends FragmentActivity {
 			        }
 			    });
 			   
-			   for(int i=0;i<arrListResult.size();i++){
-				   RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-				   
-					lpForButton.height=screenW/2;
-					lpForButton.setMargins(0,i*lpForButton.height, 0, 0);
-					arrListResult.get(i).setLayoutParams(lpForButton);
-					LatLng locate=new LatLng(arrListResult.get(i).lat,arrListResult.get(i).lng);
-					Marker marker =map.addMarker(new MarkerOptions()
-														.position(locate)
-														.title(arrListResult.get(i).name)
-														.snippet(arrListResult.get(i).address)
-												);
-					ShareVariable.arrMarker.add(marker);
-					rlList.addView(arrListResult.get(i));
-			   }
-			   ShareVariable.arrMarker.get(0).showInfoWindow();
+			   
+			   //ui 
+			   this.runOnUiThread(new Runnable(){
+				   @Override
+				   public void run(){
+					   btnGetMore.bringToFront();
+					   if(res.has("next_page_token")){
+						   try {
+								token=res.getString("next_page_token");
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+					   }else{
+						   btnGetMore.setVisibility(View.INVISIBLE);
+					   }
+					   RelativeLayout rlList =(RelativeLayout) findViewById(com.planb.soda.R.id.rl_list);
+					   rlList.setBackgroundColor(0xFFcccccc);
+					   for(int i=0;i<arrListResult.size();i++){
+						   RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+						   
+							lpForButton.height=screenW/2;
+							lpForButton.setMargins(0,i*lpForButton.height, 0, 0);
+							arrListResult.get(i).setLayoutParams(lpForButton);
+							LatLng locate=new LatLng(arrListResult.get(i).lat,arrListResult.get(i).lng);
+							Marker marker =map.addMarker(new MarkerOptions()
+																.position(locate)
+																.title(arrListResult.get(i).name)
+																.snippet(arrListResult.get(i).address)
+														);
+							ShareVariable.arrMarker.add(marker);
+							rlList.addView(arrListResult.get(i));
+					   }
+					   ShareVariable.arrMarker.get(0).showInfoWindow();
+				   }
+			   });
+			   
 		   }else{
 			   Log.d("test","test:"+ status);
 		   }
