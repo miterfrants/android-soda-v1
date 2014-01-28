@@ -24,7 +24,13 @@ public class PlaceItemBottomLayout extends RelativeLayout {
 		this.setBackgroundColor(0xCCFFFFFF);
 		
 		title=new TextView(context);
-    	title.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+		if(ShareVariable.screenW==1080){
+			title.setTextSize(24);
+		}else if(ShareVariable.screenW==720){
+			title.setTextSize(24);	
+		}else{
+			title.setTextSize((int) (ShareVariable.screenW*0.0347222));
+		}
     	title.setGravity(Gravity.RIGHT);
     	title.setTextColor(0xFF000000);
     	//title set position and view
@@ -37,19 +43,26 @@ public class PlaceItemBottomLayout extends RelativeLayout {
 		
 		
 		dist=new TextView(context);
-		dist.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+		if(ShareVariable.screenW==1080){
+			dist.setTextSize(18);
+		}else if(ShareVariable.screenW==720){
+			dist.setTextSize(18);	
+		}else{
+			dist.setTextSize((int) (ShareVariable.screenW*0.025));
+		}
+		
 		dist.setGravity(Gravity.LEFT);
 		dist.setTextColor(0xFF000000);
     	//title set position and view
 		RelativeLayout.LayoutParams rlpForDist=  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		
-		
-		rlpForDist.setMargins((int) (screenW*0.078125*1.2),(int) (screenW*0.09375- 55) ,0,0);
+		rlpForDist.leftMargin=(int) (ShareVariable.screenW*0.078125*1.2);
+		rlpForDist.bottomMargin=(int) (ShareVariable.screenW*0.015625);
+		rlpForDist.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		dist.setLayoutParams(rlpForDist);
 		this.addView(dist);
 		
 		
-		btnDirection=new ArrowButton(context,screenW);
+		btnDirection=new ArrowButton(context,ShareVariable.screenW);
 		RelativeLayout.LayoutParams rlpForBtnDirection=  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForBtnDirection.setMargins((int) (screenW*0.015625), (int) (screenW*0.015625), 0, 0);
 		btnDirection.setLayoutParams(rlpForBtnDirection);

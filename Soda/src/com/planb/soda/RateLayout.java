@@ -21,24 +21,42 @@ public class RateLayout extends RelativeLayout {
 		LayoutInflater inflater = (LayoutInflater) context
 		        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		    inflater.inflate(com.planb.soda.R.layout.rate_layout, this, true);
-
-		txtRate =(TextView) ((RelativeLayout) this.getChildAt(0)).getChildAt(0);
-		txtRate.setTextColor(0xFFFFFFFF);
-		
+		    
 		rateBar =(RatingBar) ((RelativeLayout) this.getChildAt(0)).getChildAt(1);
 		rateBar.setRating(0);
 		RelativeLayout.LayoutParams rlpForRateBar= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlpForRateBar.setMargins((int) (screenW*0.01641666),(int) (screenW*0.00501666),0,0);
-		rlpForRateBar.height=60;
-		rlpForRateBar.width=60;
+		rlpForRateBar.addRule(RelativeLayout.CENTER_VERTICAL);
+		//rlpForRateBar.setMargins((int) (screenW*0.01641666),(int) (screenW*0.00501666),0,0);
+		rlpForRateBar.leftMargin=(int) (ShareVariable.screenW * 0.016416666);
+		if(ShareVariable.screenW==1080){
+			rlpForRateBar.height=80;
+			rlpForRateBar.width=80;
+		}else if(ShareVariable.screenW==720){
+			rlpForRateBar.height=60;
+			rlpForRateBar.width=60;	
+		}else{
+			rlpForRateBar.height= (int) (ShareVariable.screenW * 0.0833333);
+			rlpForRateBar.width= (int) (ShareVariable.screenW * 0.0833333);
+		}
+		
 		rateBar.setLayoutParams(rlpForRateBar);
 		
-		
-		
+		txtRate =(TextView) ((RelativeLayout) this.getChildAt(0)).getChildAt(0);
+		txtRate.setTextColor(0xFFFFFFFF);
 		txtRate.setText(String.valueOf(rateBar.getRating()));
-		txtRate.setTextSize((int) (screenW*0.036041666));
 		RelativeLayout.LayoutParams rlpForTxtRate= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlpForTxtRate.setMargins((int) (screenW*0.096025),(int) (screenW*0.06875-55),0 ,0 );
+		rlpForTxtRate.addRule(RelativeLayout.CENTER_VERTICAL);
+		rlpForTxtRate.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		if(ShareVariable.screenW==1080){
+			txtRate.setTextSize(26);
+			rlpForTxtRate.rightMargin=(int) (screenW*0.01041666);
+		}else if(ShareVariable.screenW==720){
+			txtRate.setTextSize(26);
+			rlpForTxtRate.rightMargin=(int) (screenW*0.01041666);
+		}else{
+			txtRate.setTextSize((int) (screenW*0.036041666));
+			rlpForTxtRate.rightMargin=(int) (screenW*0.01041666);
+		}
 		txtRate.setLayoutParams(rlpForTxtRate);
 		// TODO Auto-generated constructor stub
 	}

@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
 				int id = getApplicationContext().getResources().getIdentifier(
 						item.getString("pic"), "drawable", getPackageName());
 				Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
-				btn.setImageBitmap(Bitmap.createScaledBitmap(bm, 120, 120,
+				btn.setImageBitmap(Bitmap.createScaledBitmap(bm, ShareVariable.screenW/6, ShareVariable.screenW/6,
 						false));
 				btn.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {

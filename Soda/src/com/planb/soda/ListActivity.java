@@ -126,7 +126,14 @@ public class ListActivity extends FragmentActivity {
 		rlpForBtnGetMore.leftMargin=10;
 		rlpForBtnGetMore.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		//peter modify
-		btnGetMore.setTextSize(10);
+		if(ShareVariable.screenW==1080){
+			btnGetMore.setTextSize(10);
+		}else if(ShareVariable.screenW==720){
+			btnGetMore.setTextSize(10);	
+		}else{
+			btnGetMore.setTextSize((int) (screenW * 0.01388888));
+		}
+		
 		btnGetMore.setVisibility(View.INVISIBLE);
 		btnGetMore.setTextColor(0xFFFFFFFF);
 		btnGetMore.setText("更多");
@@ -196,7 +203,13 @@ public class ListActivity extends FragmentActivity {
 		_btnTakeMeThere.setLayoutParams(rlForMapTakeMeThereButton);
 		_btnTakeMeThere.setBackgroundResource(R.drawable.nav_btn);
 		_btnTakeMeThere.setText("導航");
-		_btnTakeMeThere.setTextSize(38);
+		//尺寸調整
+		if(ShareVariable.screenW==1080){
+			_btnTakeMeThere.setTextSize(20);
+		}else if(ShareVariable.screenW==720){
+			_btnTakeMeThere.setTextSize(38);
+		}
+		
 		_btnTakeMeThere.setTextAlignment(View.TEXT_DIRECTION_LTR);
 		_btnTakeMeThere.setTextColor(0xFFFFFFFF);
 		_btnTakeMeThere.setPadding(0,0,(int) (screenW*0.339062*0.5),0);
@@ -228,6 +241,9 @@ public class ListActivity extends FragmentActivity {
 		final SupportMapFragment myMAPF = (SupportMapFragment) myFM
 		                .findFragmentById(R.id.map);
 		map=myMAPF.getMap();
+		if(map==null){
+			Log.d("test","test");
+		}
 		myMAPF.getMap().getUiSettings().setZoomControlsEnabled(false);
 		setMapCenter(currentLocation.getLatitude(),currentLocation.getLongitude(),15);
 	    //map.setOnInfoWindowClickListener(getMarkerClickListener());
