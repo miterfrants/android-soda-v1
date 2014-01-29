@@ -199,7 +199,7 @@ public class ListActivity extends FragmentActivity {
 		_btnTakeMeThere.setLayoutParams(rlForMapTakeMeThereButton);
 		_btnTakeMeThere.setBackgroundResource(R.drawable.nav_btn);
 		_btnTakeMeThere.setText("導 航");
-		//尺寸調整 9
+		//尺寸調整  10
 		
 		
 		
