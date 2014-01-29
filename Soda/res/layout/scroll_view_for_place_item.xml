@@ -1,0 +1,17 @@
+<com.planb.soda.ScrollViewForPlaceItem
+    	xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/sv_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="0dp" >
+
+        <RelativeLayout
+            android:id="@+id/rl_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </RelativeLayout>
+ </com.planb.soda.ScrollViewForPlaceItem>
