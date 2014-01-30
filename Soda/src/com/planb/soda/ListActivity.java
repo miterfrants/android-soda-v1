@@ -57,6 +57,12 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 @SuppressLint("InlinedApi")
 public class ListActivity extends FragmentActivity {
 	public String token="";
+	public Location currentLocation=null;
+	public boolean isShowingGetMore=false;
+	public int selectedMarkerIndex=-1;
+	public GifMovieView ldImg=null;
+	public TextView txtLoadingStatus=null;
+	
 	private int screenW=0;
 	private Button btnGetMore;
 	private String urlGet;
@@ -66,14 +72,11 @@ public class ListActivity extends FragmentActivity {
 	private String otherSource;
 	private RelativeLayout rlForContent=null;
 	private ScrollViewForPlaceItem scForPI =null;
-	public Location currentLocation=null;
 	private GoogleMap map=null;
-	public boolean isShowingGetMore=false;
-	public int selectedMarkerIndex=-1;
 	private Button _btnNext=null;
 	private Button _btnPreviouse=null;
 	private Button _btnTakeMeThere =null;
-	public GifMovieView ldImg=null;
+	
 	public static List<PlaceItem> arrListResult=new ArrayList<PlaceItem>();
 	@Override 
 	protected void onStart(){
@@ -98,6 +101,14 @@ public class ListActivity extends FragmentActivity {
 		ldImg.setLayoutParams(rlpForImg);
 		rlForContent.addView(ldImg);
 
+		//loading status
+		txtLoadingStatus=new TextView(this);
+		RelativeLayout.LayoutParams rlpForTxtLoadingStatus=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+		rlpForTxtLoadingStatus.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+		txtLoadingStatus.setLayoutParams(rlpForTxtLoadingStatus);
+		txtLoadingStatus.setText("正在讀取資料中...");
+		rlForContent.addView(txtLoadingStatus);
 		
 		LocationManager lm=(LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
 		currentLocation=ShareVariable.getLocation(lm);
@@ -268,21 +279,25 @@ public class ListActivity extends FragmentActivity {
 		ActionBar bar=getActionBar();
 		bar.setDisplayHomeAsUpEnabled(true);
 		bar.setTitle("Soda | "+getIntent().getStringExtra("title"));
+		
+		getData(true);
+	}
+	
+	public void getData(final boolean isNew){
 		Thread thread = new Thread()
 		{
 		    @Override
 		    public void run() {
 		        try {
-		            getData(true);
+		            getDataMain(isNew);
 		        } catch (Exception e) {
 		            e.printStackTrace();
 		        }
 		    }
 		};
 		thread.start();
-		//getData(true);
 	}
-
+	
 	public OnMarkerClickListener getMarkerClickListener()
 	{
 	    return new OnMarkerClickListener() 
@@ -404,10 +419,10 @@ public class ListActivity extends FragmentActivity {
 		});
 		btnGetMore.startAnimation(animSet);
 	}
-	public void getData(boolean isNew){
-		Log.d("test","test getData:true");
+	public void getDataMain(boolean isNew){
 		if(isNew){
 			this.token="";
+			this.arrListResult.clear();
 		}
 		if(currentLocation ==  null){
 			//peter modify pop up
@@ -428,6 +443,7 @@ public class ListActivity extends FragmentActivity {
 		    	try{
 		    		//Log.d("test","test response:"+response);
 		    		JSONObject res=new JSONObject(response);
+		    		
 		    		generateList(res);
 		    	}catch(Exception ex){
 		    		ex.printStackTrace();
@@ -447,33 +463,27 @@ public class ListActivity extends FragmentActivity {
 	    
 	}
 	public void generateList(final JSONObject res){
-	   
 	   try{
 		   //data prepare
 		   String status =res.getString("status");
+//		   Log.d("test","test res:"+ res.toString(2));
+//		   Log.d("test","test count:"+String.valueOf(res.getJSONArray("results").length()));
 		   if(status.equals("OK")){
-			   if(arrRes !=null && arrRes.length()>0){
-				   JSONArray tempArr=res.getJSONArray("results");
-				   for(int i=0;i< tempArr.length();i++){
-					   arrRes.put(tempArr.get(i));   
-				   }
-			   }else{
-				   arrRes=res.getJSONArray("results");   
-			   }
 			   
-			   
+			   arrRes=res.getJSONArray("results");
 			   for(int i=0;i<arrRes.length();i++){
 				   JSONObject item= arrRes.getJSONObject(i);
 				   JSONObject location=item.getJSONObject("geometry").getJSONObject("location");
 				   PlaceItem btn=new PlaceItem(this.getApplicationContext(),this.getWindow().getWindowManager().getDefaultDisplay().getWidth());
 					btn.bottomLayout.title.setText(item.getString("name"));
 					btn.name=item.getString("name");
+					Log.d("test","test name:"+ item.getString("name"));
 					btn.lat=Double.parseDouble(location.getString("lat"));
 					btn.lng=Double.parseDouble(location.getString("lng"));
 					btn.address=item.getString("vicinity");
 
 					//String urlDist="https://maps.googleapis.com/maps/api/distancematrix/json?origins=%.8F,%.8F&destinations=%.8F,%.8F&mode=walk&language=zh-TW&sensor=false";
-					Log.d("test","test item name:"+item.getString("name"));
+					//Log.d("test","test item name:"+item.getString("name"));
 					if(item.has("rating")){
 						btn.rateLayout.setRating((float) item.getDouble("rating")/5);
 						btn.rateLayout.txtRate.setText(String.valueOf(item.getDouble("rating")));
