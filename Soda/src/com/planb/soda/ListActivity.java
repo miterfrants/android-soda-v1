@@ -32,6 +32,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
@@ -151,7 +152,7 @@ public class ListActivity extends FragmentActivity {
 		btnGetMore.setLayoutParams(rlpForBtnGetMore);
 		btnGetMore.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
-		    	RelativeLayout rlList =(RelativeLayout) findViewById(com.planb.soda.R.id.rl_list);
+		    	LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
 		    	rlList.removeAllViews();
 		    	getData(false);
 		    }
@@ -527,13 +528,11 @@ public class ListActivity extends FragmentActivity {
 					   }else{
 						   btnGetMore.setVisibility(View.INVISIBLE);
 					   }
-					   RelativeLayout rlList =(RelativeLayout) findViewById(com.planb.soda.R.id.rl_list);
+					   LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
 					   rlList.setBackgroundColor(0xFFcccccc);
 					   for(int i=0;i<arrListResult.size();i++){
 						   RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-						   
 							lpForButton.height=screenW/2;
-							lpForButton.setMargins(0,i*lpForButton.height, 0, 0);
 							arrListResult.get(i).setLayoutParams(lpForButton);
 							LatLng locate=new LatLng(arrListResult.get(i).lat,arrListResult.get(i).lng);
 							if(map != null){
