@@ -18,6 +18,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ImageView.ScaleType;
 
@@ -48,16 +49,16 @@ public class PlaceItem extends RelativeLayout {
 
 		bg = new ImageView(context);
 		bg.setScaleType(ScaleType.CENTER_CROP);
-		RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
+		LinearLayout.LayoutParams rlp = new LinearLayout.LayoutParams(
 				RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		bg.setLayoutParams(rlp);
 		bottomLayout = new PlaceItemBottomLayout(this.getContext(), screenW);
 
 		this.addView(bg);
-		this.addView(rateLayout);
-		this.addView(bottomLayout);
-		this.setBackgroundColor(0xFFCCCCCC);
+		//this.addView(rateLayout);
+		//this.addView(bottomLayout);
+		//this.setBackgroundColor(0xFFCCCCCC);
 		// TODO Auto-generated constructor stub
 	}
 
