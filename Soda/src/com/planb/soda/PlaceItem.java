@@ -56,6 +56,7 @@ public class PlaceItem extends RelativeLayout {
 		bottomLayout = new PlaceItemBottomLayout(this.getContext(), screenW);
 
 		this.addView(bg);
+		
 		//this.addView(rateLayout);
 		//this.addView(bottomLayout);
 		//this.setBackgroundColor(0xFFCCCCCC);
