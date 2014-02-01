@@ -3,8 +3,8 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="C:/Program Files/android developer/sdk/extras/android/support/v4/android-support-v4.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/in/import/jar/android-async-http-1.4.4.jar"/>
+	<classpathentry kind="lib" path="D:/Project/android-sdk/extras/android/support/v4/android-support-v4.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/Project/libs/jar/android-async-http-1.4.4.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>
