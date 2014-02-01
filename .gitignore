@@ -1,4 +1,6 @@
 /gen
 /bin
 /assets
+/out
+.idea/*
 .classpath
