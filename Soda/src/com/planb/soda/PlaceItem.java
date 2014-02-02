@@ -52,7 +52,7 @@ public class PlaceItem extends RelativeLayout {
 		rateLayout = new RateLayout(context, screenW);
 		
 		this.addView(bg);
-		this.addView(rateLayout);
+		//this.addView(rateLayout);
 		this.addView(bottomLayout);
 		this.setBackgroundColor(0xFFCCCCCC);
 		// TODO Auto-generated constructor stub

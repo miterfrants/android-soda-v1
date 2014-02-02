@@ -349,6 +349,9 @@ public class ListActivity extends FragmentActivity {
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 	}
 	public void showButtonGetMore(){
+		if(this.token.length()==0){
+			return;
+		}
 		isShowingGetMore=true;
 		ScaleAnimation sanim= new ScaleAnimation((float) 0.8,(float) 1,(float) 0.8,(float) 1);
 		sanim.setDuration(260);
@@ -406,6 +409,7 @@ public class ListActivity extends FragmentActivity {
 		    }           
 		    @Override
 		    public void onAnimationEnd(Animation arg0) {
+
 		    	isShowingGetMore=false;
 		    }
 		});
@@ -472,8 +476,8 @@ public class ListActivity extends FragmentActivity {
 					btn.address=item.getString("vicinity");
 
 					if(item.has("rating")){
-						btn.rateLayout.setRating((float) item.getDouble("rating")/5);
-						btn.rateLayout.txtRate.setText(String.valueOf(item.getDouble("rating")));
+//						btn.rateLayout.setRating((float) item.getDouble("rating")/5);
+//						btn.rateLayout.txtRate.setText(String.valueOf(item.getDouble("rating")));
 					}
 					if(item.has("photos")){
 						String photoRef=item.getJSONArray("photos").getJSONObject(0).getString("photo_reference");
@@ -512,7 +516,11 @@ public class ListActivity extends FragmentActivity {
 								e.printStackTrace();
 							}
 					   }else{
-						   btnGetMore.setVisibility(View.INVISIBLE);
+						   token="";
+						   //peter Modify
+						   //RelativeLayout rlForContent=(RelativeLayout) btnGetMore.getParent(); 		
+						   //rlForContent.removeView(btnGetMore);
+						   //btnGetMore.setVisibility(Button.INVISIBLE);
 					   }
 					   LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
 					   rlList.setBackgroundColor(0xFFcccccc);
