@@ -17,6 +17,7 @@ import android.graphics.Canvas;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,15 +38,8 @@ public class PlaceItem extends RelativeLayout {
 		super(context);
 
 		this.setClickable(true);
-		rateLayout = new RateLayout(context, screenW);
-		RelativeLayout.LayoutParams rlpForRateLayout = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.WRAP_CONTENT,
-				RelativeLayout.LayoutParams.MATCH_PARENT);
-		rlpForRateLayout.height = (int) (screenW * 0.09375);
-		rlpForRateLayout.width = (int) (screenW * 0.21875);
-		rlpForRateLayout.setMargins((int) (screenW * 0.765625),
-				(int) (screenW * 0.29375), 0, 0);
-		rateLayout.setLayoutParams(rlpForRateLayout);
+		
+		
 
 		bg = new ImageView(context);
 		bg.setScaleType(ScaleType.CENTER_CROP);
@@ -53,13 +47,14 @@ public class PlaceItem extends RelativeLayout {
 				RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		bg.setLayoutParams(rlp);
-		bottomLayout = new PlaceItemBottomLayout(this.getContext(), screenW);
-
-		this.addView(bg);
 		
-		//this.addView(rateLayout);
-		//this.addView(bottomLayout);
-		//this.setBackgroundColor(0xFFCCCCCC);
+		bottomLayout = new PlaceItemBottomLayout(this.getContext(), screenW);
+		rateLayout = new RateLayout(context, screenW);
+		
+		this.addView(bg);
+		this.addView(rateLayout);
+		this.addView(bottomLayout);
+		this.setBackgroundColor(0xFFCCCCCC);
 		// TODO Auto-generated constructor stub
 	}
 

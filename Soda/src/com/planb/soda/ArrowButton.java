@@ -10,14 +10,13 @@ import android.widget.Button;
 
 @SuppressLint({ "DrawAllocation", "ViewConstructor" })
 public class ArrowButton extends Button {
-	private int _itemWidth=0;
-	public ArrowButton(Context context,int itemWidth) {
+	public ArrowButton(Context context) {
 		super(context);
-		_itemWidth=itemWidth;
 		this.setBackgroundColor(0x00FFFFFF);
 		// TODO Auto-generated constructor stub
 	}
 	
+
 	@Override
 	public void onDraw(Canvas canvas){
 		
@@ -27,7 +26,7 @@ public class ArrowButton extends Button {
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		path.setFillType(Path.FillType.EVEN_ODD);
 		
-		int base=(int) (_itemWidth*0.0625);
+		int base=(int) (ShareVariable.screenW*0.0625);
 		path.moveTo(base/2, 0);
 		path.lineTo(base, base);
 		path.lineTo((int) base/2,(int) (base*0.75));

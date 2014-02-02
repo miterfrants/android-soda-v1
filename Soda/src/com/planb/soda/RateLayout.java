@@ -1,12 +1,10 @@
 package com.planb.soda;
 
-import android.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -21,12 +19,23 @@ public class RateLayout extends RelativeLayout {
 		LayoutInflater inflater = (LayoutInflater) context
 		        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		    inflater.inflate(com.planb.soda.R.layout.rate_layout, this, true);
-		    
+
+		RelativeLayout.LayoutParams rlpForThis = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.WRAP_CONTENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		rlpForThis.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		rlpForThis.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		rlpForThis.height = (int) (screenW * 0.09375);
+		rlpForThis.width = (int) (screenW * 0.21875);
+		rlpForThis.bottomMargin=(int) (ShareVariable.screenW * 0.09375+22);
+		rlpForThis.rightMargin=(int) (22);
+		this.setLayoutParams(rlpForThis);
+		
 		rateBar =(RatingBar) ((RelativeLayout) this.getChildAt(0)).getChildAt(1);
-		rateBar.setRating((float) 0.00);
+		rateBar.setRating((float) 0.00);		
 		RelativeLayout.LayoutParams rlpForRateBar= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForRateBar.addRule(RelativeLayout.CENTER_VERTICAL);
-		//rlpForRateBar.setMargins((int) (screenW*0.01641666),(int) (screenW*0.00501666),0,0);
+		rlpForRateBar.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		rlpForRateBar.leftMargin=(int) (ShareVariable.screenW * 0.022416666);
 		if(ShareVariable.screenW==1080){
 			rlpForRateBar.height=80;
@@ -34,8 +43,7 @@ public class RateLayout extends RelativeLayout {
 		}else{
 			//no config adapter container
 		}
-		
-		rateBar.setLayoutParams(rlpForRateBar);
+		rateBar.setLayoutParams(rlpForRateBar);	
 		
 		txtRate =(TextView) ((RelativeLayout) this.getChildAt(0)).getChildAt(0);
 		txtRate.setTextColor(0xFFFFFFFF);

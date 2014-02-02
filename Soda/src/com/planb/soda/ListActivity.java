@@ -23,6 +23,7 @@ import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,9 +62,9 @@ public class ListActivity extends FragmentActivity {
 	public Location currentLocation=null;
 	public boolean isShowingGetMore=false;
 	public int selectedMarkerIndex=-1;
-	public GifMovieView ldImg=null;
-	public TextView txtLoadingStatus=null;
+	public LoadingLayout ldLayout=null;
 	
+	 
 	private int screenW=0;
 	private Button btnGetMore;
 	private String urlGet;
@@ -94,22 +95,9 @@ public class ListActivity extends FragmentActivity {
 		setContentView(com.planb.soda.R.layout.activity_list);
 		rlForContent= new RelativeLayout(this);
 		
-		//loading bar 
-		GifMovieView ldImg=new GifMovieView(this);
-		ldImg.setMovieResource(R.drawable.loading);
-		RelativeLayout.LayoutParams rlpForImg= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlpForImg.addRule(RelativeLayout.CENTER_IN_PARENT);
-		ldImg.setLayoutParams(rlpForImg);
-		rlForContent.addView(ldImg);
-
-		//loading status
-		txtLoadingStatus=new TextView(this);
-		RelativeLayout.LayoutParams rlpForTxtLoadingStatus=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlpForTxtLoadingStatus.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-		txtLoadingStatus.setLayoutParams(rlpForTxtLoadingStatus);
-		txtLoadingStatus.setText("正在讀取資料中...");
-		rlForContent.addView(txtLoadingStatus);
+		ldLayout=new LoadingLayout(this);;
+		rlForContent.addView(ldLayout);
+		
 		
 		LocationManager lm=(LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
 		currentLocation=ShareVariable.getLocation(lm);
@@ -212,9 +200,7 @@ public class ListActivity extends FragmentActivity {
 		_btnTakeMeThere.setBackgroundResource(R.drawable.nav_btn);
 		_btnTakeMeThere.setText("導 航");
 		//尺寸調整  16
-		
-		
-		
+
 		if(ShareVariable.screenW==1080){
 			_btnTakeMeThere.setTextSize(20);
 		}else if(ShareVariable.screenW==720 || ShareVariable.screenW==768){
@@ -467,8 +453,6 @@ public class ListActivity extends FragmentActivity {
 	   try{
 		   //data prepare
 		   String status =res.getString("status");
-//		   Log.d("test","test res:"+ res.toString(2));
-//		   Log.d("test","test count:"+String.valueOf(res.getJSONArray("results").length()));
 		   if(status.equals("OK")){
 			   
 			   arrRes=res.getJSONArray("results");
@@ -478,13 +462,10 @@ public class ListActivity extends FragmentActivity {
 				   PlaceItem btn=new PlaceItem(this.getApplicationContext(),this.getWindow().getWindowManager().getDefaultDisplay().getWidth());
 					btn.bottomLayout.title.setText(item.getString("name"));
 					btn.name=item.getString("name");
-					Log.d("test","test name:"+ item.getString("name"));
 					btn.lat=Double.parseDouble(location.getString("lat"));
 					btn.lng=Double.parseDouble(location.getString("lng"));
 					btn.address=item.getString("vicinity");
 
-					//String urlDist="https://maps.googleapis.com/maps/api/distancematrix/json?origins=%.8F,%.8F&destinations=%.8F,%.8F&mode=walk&language=zh-TW&sensor=false";
-					//Log.d("test","test item name:"+item.getString("name"));
 					if(item.has("rating")){
 						btn.rateLayout.setRating((float) item.getDouble("rating")/5);
 						btn.rateLayout.txtRate.setText(String.valueOf(item.getDouble("rating")));

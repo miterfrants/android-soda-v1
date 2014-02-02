@@ -63,8 +63,7 @@ public class PlaceItemBottomLayout extends RelativeLayout {
 		dist.setLayoutParams(rlpForDist);
 		this.addView(dist);
 		
-		
-		btnDirection=new ArrowButton(context,ShareVariable.screenW);
+		btnDirection=new ArrowButton(context);
 		RelativeLayout.LayoutParams rlpForBtnDirection=  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForBtnDirection.setMargins((int) (screenW*0.015625), (int) (screenW*0.015625), 0, 0);
 		btnDirection.setLayoutParams(rlpForBtnDirection);
