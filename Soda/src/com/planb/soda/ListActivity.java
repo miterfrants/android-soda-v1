@@ -392,7 +392,8 @@ public class ListActivity extends FragmentActivity {
 		    }           
 		    @Override
 		    public void onAnimationRepeat(Animation arg0) {
-		    }           
+		    }      
+
 		    @Override
 		    public void onAnimationEnd(Animation arg0) {
 		    	RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams) btnGetMore.getLayoutParams();
