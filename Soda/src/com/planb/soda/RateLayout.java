@@ -5,7 +5,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Paint.Style;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
+import android.graphics.drawable.shapes.RoundRectShape;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +22,15 @@ public class RateLayout extends RelativeLayout {
 	public RatingBar rateBar=null;
 	public RateLayout(Context context,int screenW) {
 		super(context);
+		float[] outerR = new float[] { 5, 5, 5, 5, 5, 5, 5, 5 };
+		ShapeDrawable rect = new ShapeDrawable(new RoundRectShape(outerR, null, null));
+		rect.setBounds(0, 0, (int) (screenW * 0.21875), (int) (screenW * 0.09375));
+		Paint paint = rect.getPaint();
+		paint.setColor(0xCC999999);		
+		this.setBackground(rect);
+
+		
+		
 		LayoutInflater inflater = (LayoutInflater) context
 		        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		    inflater.inflate(com.planb.soda.R.layout.rate_layout, this, true);
@@ -36,7 +51,7 @@ public class RateLayout extends RelativeLayout {
 		RelativeLayout.LayoutParams rlpForRateBar= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForRateBar.addRule(RelativeLayout.CENTER_VERTICAL);
 		rlpForRateBar.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		rlpForRateBar.leftMargin=(int) (ShareVariable.screenW * 0.022416666);
+		rlpForRateBar.leftMargin=(int) (ShareVariable.screenW * 0.015416666);
 		if(ShareVariable.screenW==1080){
 			rlpForRateBar.height=80;
 			rlpForRateBar.width=80;
@@ -63,17 +78,14 @@ public class RateLayout extends RelativeLayout {
 		}
 		txtRate.setLayoutParams(rlpForTxtRate);
 		// TODO Auto-generated constructor stub
+		txtRate.bringToFront();
+		rateBar.bringToFront();
 	}
 	
-    @Override
-    public void dispatchDraw(Canvas canvas) {
-    	Paint paint=new Paint();
-    	paint.setColor(0xCC999999);
-    	canvas.drawRoundRect(new RectF(0,0,this.getWidth(),this.getHeight()), 5, 5, paint);
-    	super.dispatchDraw(canvas);
-    }
+
 	public void setRating(float rate){
 		rateBar.setRating(rate);
+		
 		//Log.d("test","test width:" + String.valueOf(rateBar.getVerticalScrollbarWidth()));
 	}
 

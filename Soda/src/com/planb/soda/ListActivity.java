@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -84,6 +85,7 @@ public class ListActivity extends FragmentActivity {
 		ShareVariable.arrMarker.clear();
 		arrListResult.clear();
 		super.onCreate(savedInstanceState);
+		ViewServer.get(this).addWindow(this); 
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 	    StrictMode.setThreadPolicy(policy);
 		setContentView(com.planb.soda.R.layout.activity_list);
@@ -91,8 +93,7 @@ public class ListActivity extends FragmentActivity {
 		
 		ldLayout=new LoadingLayout(this);;
 		rlForContent.addView(ldLayout);
-		
-		
+
 		LocationManager lm=(LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
 		currentLocation=ShareVariable.getLocation(lm);
 		if(currentLocation==null){
@@ -116,29 +117,28 @@ public class ListActivity extends FragmentActivity {
 		RelativeLayout.LayoutParams rlpForBtnGetMore= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForBtnGetMore.width=((int) (screenW*0.125));
 		rlpForBtnGetMore.height=((int) (screenW*0.125));
-		rlpForBtnGetMore.bottomMargin=10;
-		rlpForBtnGetMore.leftMargin=10;
+		rlpForBtnGetMore.bottomMargin=5;
+		rlpForBtnGetMore.leftMargin=5;
 		rlpForBtnGetMore.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		//peter modify
 		if(ShareVariable.screenW==1080){
-			btnGetMore.setTextSize(10);
+			btnGetMore.setTextSize(9);
 		}else if(ShareVariable.screenW==720 || ShareVariable.screenW==768){
-			btnGetMore.setTextSize(10);	
+			btnGetMore.setTextSize(9);	
 		}else{
 			btnGetMore.setTextSize((int) (screenW * 0.01688888));
 		}
-		
-		btnGetMore.setVisibility(View.INVISIBLE);
 		btnGetMore.setTextColor(0xFFFFFFFF);
 		btnGetMore.setText("更多");
+		//btnGetMore.setSingleLine(true);
 		btnGetMore.setLayoutParams(rlpForBtnGetMore);
+		btnGetMore.setAlpha(0);
+		btnGetMore.setClickable(false);
 		btnGetMore.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		    	LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
 		    	rlList.removeAllViews();
 		    	String ip = Util.getIPAddress(true);
 		    	ListActivity la=(ListActivity)	v.getContext();
-		    	Log.d("test","test title:"+ la.title);
 				String url="http://"+ShareVariable.domain+ShareVariable.reportController+"?action=add-get-more&cate="+la.title+"&creator_ip="+ip;
 				AsyncHttpClient client = new AsyncHttpClient();
 		 		client.get(url, new AsyncHttpResponseHandler() {
@@ -153,7 +153,8 @@ public class ListActivity extends FragmentActivity {
 		    }
 		});
 		rlForContent.addView(btnGetMore);
-
+		//hideButtonGetMore(0);
+		
 		//list containerscForPI
 		this.scForPI =(ScrollViewForPlaceItem) LayoutInflater.from(this).inflate(com.planb.soda.R.layout.scroll_view_for_place_item,null);
 		rlForContent.addView(scForPI);
@@ -254,8 +255,6 @@ public class ListActivity extends FragmentActivity {
 			Toast toast = Toast.makeText(this, "無法使用您的Google Map，麻煩您更新。", 1000);
     		toast.show();
 		}
-		
-		
 	    RelativeLayout.LayoutParams rlpForRightView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 	    rlpForRightView.width=(int) (ShareVariable.screenW*0.9);
 	    rlpForRightView.height=ShareVariable.screenH;
@@ -268,7 +267,6 @@ public class ListActivity extends FragmentActivity {
 	    slideMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 	    slideMenu.setBehindWidth((int) (ShareVariable.screenW*0.9));
 	    slideMenu.setOnOpenedListener(new OnOpenedListener(){
-
 			@Override
 			public void onOpened() {
 				// TODO Auto-generated method stub
@@ -287,8 +285,6 @@ public class ListActivity extends FragmentActivity {
 			}
 	    	
 	    });
-	    		
-		
 		ActionBar bar=getActionBar();
 		bar.setDisplayHomeAsUpEnabled(true);
 		title=getIntent().getStringExtra("title");
@@ -370,23 +366,24 @@ public class ListActivity extends FragmentActivity {
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 	}
 	public void showButtonGetMore(){
+		btnGetMore.clearAnimation();
 		if(this.token.length()==0){
 			return;
 		}
-		isShowingGetMore=true;
-		ScaleAnimation sanim= new ScaleAnimation((float) 0.8,(float) 1,(float) 0.8,(float) 1);
+		ScaleAnimation sanim= new ScaleAnimation((float) 1,(float) 1.2,(float) 1,(float) 1.2);
 		sanim.setDuration(260);
 		sanim.setFillAfter(true);
-		TranslateAnimation  tranAnim=new TranslateAnimation((float) (-screenW*0.0625),10 ,
-				(float) (screenW*0.0625),-10
+		TranslateAnimation  tranAnim=new TranslateAnimation(0,70 ,
+				0,-90
 				);
+		
 		tranAnim.setDuration(260);
 		tranAnim.setFillAfter(true);
 		AnimationSet animSet=new AnimationSet(false);
 		animSet.setFillAfter(true);
 		animSet.addAnimation(sanim);
 		animSet.addAnimation(tranAnim);
-		btnGetMore.setAnimation(animSet);
+		isShowingGetMore=true;
 		animSet.setAnimationListener(new Animation.AnimationListener(){
 		    @Override
 		    public void onAnimationStart(Animation arg0) {
@@ -400,22 +397,22 @@ public class ListActivity extends FragmentActivity {
         	    handler.postDelayed(new Runnable() {
         	      @Override
         	      public void run() {
-        	    	  hideButtonGetMore();
+        	    	  hideButtonGetMore(260);
         	      }
         	    }, 3500);
 		    }
 		});
+		btnGetMore.setAnimation(animSet);
+		animSet.startNow();
 	}
-	public void hideButtonGetMore(){
-		
-		//Log.d("test","test hideButtonGetMore");
-		ScaleAnimation sanim= new ScaleAnimation((float) 1,(float) 0.8,(float) 1,(float) 0.8);
-		sanim.setDuration(260);
+	public void hideButtonGetMore(int duration){
+		ScaleAnimation sanim= new ScaleAnimation((float) 1.2,(float) 1,(float) 1.2,(float) 1);
+		sanim.setDuration(duration);
 		sanim.setFillAfter(true);
-		TranslateAnimation  tranAnim=new TranslateAnimation(0, (float) (-screenW*0.0625),
-					0,(float) (screenW*0.0625)
+		TranslateAnimation  tranAnim=new TranslateAnimation(70, 0,
+					-90,0
 				);
-		tranAnim.setDuration(260);
+		tranAnim.setDuration(duration);
 		tranAnim.setFillAfter(true);
 		AnimationSet animSet=new AnimationSet(false);
 		animSet.setFillAfter(true);
@@ -431,7 +428,10 @@ public class ListActivity extends FragmentActivity {
 		    @Override
 		    public void onAnimationEnd(Animation arg0) {
 		    	isShowingGetMore=false;
+		    	btnGetMore.clearAnimation();
 		    	if(token.length()==0){
+		    		btnGetMore.setAlpha(0);
+		    		btnGetMore.setClickable(false);
 		    		btnGetMore.setVisibility(View.INVISIBLE);
 		    	}
 		    }
@@ -499,8 +499,8 @@ public class ListActivity extends FragmentActivity {
 					btn.address=item.getString("vicinity");
 
 					if(item.has("rating")){
-//						btn.rateLayout.setRating((float) item.getDouble("rating")/5);
-//						btn.rateLayout.txtRate.setText(String.valueOf(item.getDouble("rating")));
+						btn.rateLayout.setRating((float) item.getDouble("rating")/5);
+						btn.rateLayout.txtRate.setText(String.valueOf(item.getDouble("rating")));
 					}
 					if(item.has("photos")){
 						String photoRef=item.getJSONArray("photos").getJSONObject(0).getString("photo_reference");
@@ -532,6 +532,8 @@ public class ListActivity extends FragmentActivity {
 				   public void run(){
 					   btnGetMore.bringToFront();
 					   if(res.has("next_page_token")){
+						   btnGetMore.setAlpha(1);
+						   btnGetMore.setClickable(true);
 						   try {
 								token=res.getString("next_page_token");
 							} catch (JSONException e) {
@@ -540,10 +542,8 @@ public class ListActivity extends FragmentActivity {
 							}
 					   }else{
 						   token="";
-						   //peter Modify
-						   //RelativeLayout rlForContent=(RelativeLayout) btnGetMore.getParent(); 		
-						   //rlForContent.removeView(btnGetMore);
-						   //btnGetMore.setVisibility(Button.INVISIBLE);
+						   btnGetMore.setAlpha(0);
+						   btnGetMore.setClickable(false);
 					   }
 					   LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
 					   rlList.setBackgroundColor(0xFFcccccc);
@@ -578,5 +578,13 @@ public class ListActivity extends FragmentActivity {
 	   
 	}
 	
-
+    public void onDestroy() {  
+        super.onDestroy();  
+        ViewServer.get(this).removeWindow(this);  
+   }  
+  
+    public void onResume() {  
+        super.onResume();  
+        ViewServer.get(this).setFocusedWindow(this);  
+   }  
 }

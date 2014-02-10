@@ -5,14 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.RelativeLayout.LayoutParams;
 
 @SuppressLint("ViewConstructor")
 public class PlaceItemBottomLayout extends RelativeLayout {
@@ -66,6 +71,9 @@ public class PlaceItemBottomLayout extends RelativeLayout {
 		btnDirection=new ArrowButton(context);
 		RelativeLayout.LayoutParams rlpForBtnDirection=  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForBtnDirection.setMargins((int) (screenW*0.015625), (int) (screenW*0.015625), 0, 0);
+		rlpForBtnDirection.height=(int) (ShareVariable.screenW*0.0625);
+		rlpForBtnDirection.width=(int) (ShareVariable.screenW*0.0625);
+				
 		btnDirection.setLayoutParams(rlpForBtnDirection);
 		btnDirection.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -88,19 +96,26 @@ public class PlaceItemBottomLayout extends RelativeLayout {
             }
         });
 		this.addView(btnDirection);
+		
+		RelativeLayout.LayoutParams rlpForThis= new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		rlpForThis.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		rlpForThis.height=(int) (ShareVariable.screenW*0.09375);
+		this.setLayoutParams(rlpForThis);
 		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-    public void dispatchDraw(Canvas canvas) {
-		Paint paint = new Paint();
-
-        // border
-        paint.setColor(0xFF999999);
-        canvas.drawRect(0,this.getHeight()-1,this.getWidth(),this.getHeight(), paint);
-		super.dispatchDraw(canvas);
-		
-		
-
+		//border
+		ShapeDrawable rect = new ShapeDrawable(new RectShape());
+		Paint paint = rect.getPaint();
+		paint.setColor(0xFF999999);
+		paint.setStyle(Style.STROKE);
+		paint.setStrokeWidth(1);
+		ImageView border=new ImageView(this.getContext());
+		border.setBackground(rect);
+		RelativeLayout.LayoutParams rlpForBorder= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+		rlpForBorder.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		rlpForBorder.height=1;
+		border.setLayoutParams(rlpForBorder);
+		this.addView(border);
 	}
 }

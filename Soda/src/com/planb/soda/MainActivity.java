@@ -36,6 +36,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ViewServer.get(this).addWindow(this); 
 		int screenW = getWindowManager().getDefaultDisplay().getWidth();
 		int screenH = getWindowManager().getDefaultDisplay().getHeight();
 		ShareVariable.screenW=screenW;
@@ -140,5 +141,13 @@ public class MainActivity extends Activity {
 			return -1;
 		}
 	}
-
+    public void onDestroy() {  
+        super.onDestroy();  
+        ViewServer.get(this).removeWindow(this);  
+   }  
+  
+    public void onResume() {  
+        super.onResume();  
+        ViewServer.get(this).setFocusedWindow(this);  
+   }  
 }

@@ -38,8 +38,7 @@ public class PlaceItem extends RelativeLayout {
 		super(context);
 
 		this.setClickable(true);
-		
-		
+		this.setDrawingCacheEnabled(true);
 
 		bg = new ImageView(context);
 		bg.setScaleType(ScaleType.CENTER_CROP);
@@ -52,25 +51,11 @@ public class PlaceItem extends RelativeLayout {
 		rateLayout = new RateLayout(context, screenW);
 		
 		this.addView(bg);
-		//this.addView(rateLayout);
+		this.addView(rateLayout);
 		this.addView(bottomLayout);
 		this.setBackgroundColor(0xFFCCCCCC);
-		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public void dispatchDraw(Canvas canvas) {
-		super.dispatchDraw(canvas);
-
-		RelativeLayout.LayoutParams rlpForBottomLayout = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.MATCH_PARENT,
-				RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlpForBottomLayout.height = (int) (this.getWidth() * 0.09375);
-		rlpForBottomLayout.setMargins(0, this.getHeight()
-				- rlpForBottomLayout.height, 0, 0);
-		bottomLayout.setLayoutParams(rlpForBottomLayout);
-
-	}
 
 	public void buildDist() {
 		LocationManager lm = (LocationManager) this.getContext()
