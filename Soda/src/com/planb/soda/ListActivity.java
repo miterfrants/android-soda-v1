@@ -1,7 +1,5 @@
 package com.planb.soda;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,7 +18,6 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -30,6 +27,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -115,10 +113,10 @@ public class ListActivity extends FragmentActivity {
 		btnGetMore=new Button(this);
 		btnGetMore.setBackgroundResource(com.planb.soda.R.drawable.circle_button);
 		RelativeLayout.LayoutParams rlpForBtnGetMore= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlpForBtnGetMore.width=((int) (screenW*0.125));
-		rlpForBtnGetMore.height=((int) (screenW*0.125));
-		rlpForBtnGetMore.bottomMargin=5;
-		rlpForBtnGetMore.leftMargin=5;
+		rlpForBtnGetMore.width=((int) (screenW*0.145*0.8));
+		rlpForBtnGetMore.height=((int) (screenW*0.145*0.8));
+		rlpForBtnGetMore.bottomMargin=-rlpForBtnGetMore.width/2;
+		rlpForBtnGetMore.leftMargin=-rlpForBtnGetMore.width/2;
 		rlpForBtnGetMore.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		if(ShareVariable.screenW==1080){
 			btnGetMore.setTextSize(9);
@@ -129,12 +127,14 @@ public class ListActivity extends FragmentActivity {
 		}
 		btnGetMore.setTextColor(0xFFFFFFFF);
 		btnGetMore.setText("§ó¦h");
-		//btnGetMore.setSingleLine(true);
+		btnGetMore.setSingleLine(true);
 		btnGetMore.setLayoutParams(rlpForBtnGetMore);
 		btnGetMore.setAlpha(0);
 		btnGetMore.setClickable(false);
 		btnGetMore.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
+		    	btnGetMore.setAlpha(0);
+		    	btnGetMore.setClickable(false);
 		    	LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
 		    	rlList.removeAllViews();
 		    	String ip = Util.getIPAddress(true);
@@ -373,8 +373,9 @@ public class ListActivity extends FragmentActivity {
 		ScaleAnimation sanim= new ScaleAnimation((float) 1,(float) 1.2,(float) 1,(float) 1.2);
 		sanim.setDuration(260);
 		sanim.setFillAfter(true);
-		TranslateAnimation  tranAnim=new TranslateAnimation(0,70 ,
-				0,-90
+//		Log.d("test","test margin ori:"+-btnGetMore.getHeight());
+		TranslateAnimation  tranAnim=new TranslateAnimation(0, btnGetMore.getHeight(),
+				0,-btnGetMore.getHeight()
 				);
 		
 		tranAnim.setDuration(260);
@@ -387,12 +388,22 @@ public class ListActivity extends FragmentActivity {
 		animSet.setAnimationListener(new Animation.AnimationListener(){
 		    @Override
 		    public void onAnimationStart(Animation arg0) {
+		    	RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams) btnGetMore.getLayoutParams();
 		    }           
 		    @Override
 		    public void onAnimationRepeat(Animation arg0) {
 		    }           
 		    @Override
 		    public void onAnimationEnd(Animation arg0) {
+		    	RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams) btnGetMore.getLayoutParams();
+		    	btnGetMore.clearAnimation();
+		    	lp=(RelativeLayout.LayoutParams) btnGetMore.getLayoutParams();
+		    	lp=(LayoutParams) btnGetMore.getLayoutParams();
+		    	lp.width=(int) (screenW*0.145*0.8*1.2);
+    			lp.height=(int) (screenW*0.145*0.8*1.2);
+    			lp.bottomMargin=(int) (screenW*0.145*0.8/2);
+    			lp.leftMargin=(int) (screenW*0.145*0.8/2);
+		    	btnGetMore.setLayoutParams(lp);
         		final Handler handler = new Handler();
         	    handler.postDelayed(new Runnable() {
         	      @Override
@@ -406,11 +417,17 @@ public class ListActivity extends FragmentActivity {
 		animSet.startNow();
 	}
 	public void hideButtonGetMore(int duration){
+    	RelativeLayout.LayoutParams lp=(LayoutParams) btnGetMore.getLayoutParams();
+    	lp.width=((int) (screenW*0.145*0.8));
+    	lp.height=((int) (screenW*0.145*0.8));
+    	lp.bottomMargin=-lp.width/2;
+    	lp.leftMargin=-lp.width/2;
+    	btnGetMore.setLayoutParams(lp);
 		ScaleAnimation sanim= new ScaleAnimation((float) 1.2,(float) 1,(float) 1.2,(float) 1);
 		sanim.setDuration(duration);
 		sanim.setFillAfter(true);
-		TranslateAnimation  tranAnim=new TranslateAnimation(70, 0,
-					-90,0
+		TranslateAnimation  tranAnim=new TranslateAnimation(btnGetMore.getHeight(),0,
+					-btnGetMore.getHeight(),0
 				);
 		tranAnim.setDuration(duration);
 		tranAnim.setFillAfter(true);
@@ -516,7 +533,8 @@ public class ListActivity extends FragmentActivity {
 			        @Override
 			        public int compare(PlaceItem s1, PlaceItem s2) {
 			        	if(s1.dist<s2.dist){
-			        		return -1;	
+			        		return -1;
+			        		
 			        	}else if(s1.dist>s2.dist){
 			        		return 1;
 			        	}else{
@@ -577,7 +595,6 @@ public class ListActivity extends FragmentActivity {
 	   }
 	   
 	}
-	
     public void onDestroy() {  
         super.onDestroy();  
         ViewServer.get(this).removeWindow(this);  
