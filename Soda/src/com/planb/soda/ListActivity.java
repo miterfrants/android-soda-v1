@@ -1,7 +1,7 @@
 package com.planb.soda;
 
-
-import java.security.KeyStore;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,11 +9,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -22,8 +18,6 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +30,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -49,17 +42,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenedListener;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 @SuppressLint("InlinedApi")
 public class ListActivity extends FragmentActivity {
@@ -68,7 +57,7 @@ public class ListActivity extends FragmentActivity {
 	public boolean isShowingGetMore=false;
 	public int selectedMarkerIndex=-1;
 	public LoadingLayout ldLayout=null;
-	
+	public String title="";
 	 
 	private int screenW=0;
 	private Button btnGetMore;
@@ -147,7 +136,20 @@ public class ListActivity extends FragmentActivity {
 		    public void onClick(View v) {
 		    	LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
 		    	rlList.removeAllViews();
-		    	getData(false);
+		    	String ip = Util.getIPAddress(true);
+		    	ListActivity la=(ListActivity)	v.getContext();
+		    	Log.d("test","test title:"+ la.title);
+				String url="http://"+ShareVariable.domain+ShareVariable.reportController+"?action=add-get-more&cate="+la.title+"&creator_ip="+ip;
+				AsyncHttpClient client = new AsyncHttpClient();
+		 		client.get(url, new AsyncHttpResponseHandler() {
+				    @Override
+				    public void onSuccess(String response) {
+				    }
+				    @Override
+				    public void onFailure(Throwable e, String response){
+				    }
+				});
+		 		getData(false);
 		    }
 		});
 		rlForContent.addView(btnGetMore);
@@ -265,13 +267,32 @@ public class ListActivity extends FragmentActivity {
 	    slideMenu.setMode(SlidingMenu.RIGHT);
 	    slideMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 	    slideMenu.setBehindWidth((int) (ShareVariable.screenW*0.9));
-	    
+	    slideMenu.setOnOpenedListener(new OnOpenedListener(){
+
+			@Override
+			public void onOpened() {
+				// TODO Auto-generated method stub
+				String ip = Util.getIPAddress(true);
+				String url="http://"+ShareVariable.domain+ShareVariable.reportController+"?action=add-slide-to-map&cate="+title+"&creator_ip="+ip;
+				AsyncHttpClient client = new AsyncHttpClient();
+		 		client.get(url, new AsyncHttpResponseHandler() {
+				    @Override
+				    public void onSuccess(String response) {
+				    }
+				    @Override
+				    public void onFailure(Throwable e, String response){
+				    }
+				});
+				
+			}
+	    	
+	    });
 	    		
 		
 		ActionBar bar=getActionBar();
 		bar.setDisplayHomeAsUpEnabled(true);
+		title=getIntent().getStringExtra("title");
 		bar.setTitle("Soda | "+getIntent().getStringExtra("title"));
-		
 		getData(true);
 	}
 	
@@ -409,8 +430,10 @@ public class ListActivity extends FragmentActivity {
 		    }           
 		    @Override
 		    public void onAnimationEnd(Animation arg0) {
-
 		    	isShowingGetMore=false;
+		    	if(token.length()==0){
+		    		btnGetMore.setVisibility(View.INVISIBLE);
+		    	}
 		    }
 		});
 		btnGetMore.startAnimation(animSet);
@@ -432,7 +455,7 @@ public class ListActivity extends FragmentActivity {
 			urlTempGet+="&pagetoken="+this.token;
 		}
 		AsyncHttpClient client = new AsyncHttpClient();
-		Log.d("test","test get more:"+urlTempGet);
+		//Log.d("test","test get more:"+urlTempGet);
  		client.get(urlTempGet, new AsyncHttpResponseHandler() {
 		    @Override
 		    public void onSuccess(String response) {

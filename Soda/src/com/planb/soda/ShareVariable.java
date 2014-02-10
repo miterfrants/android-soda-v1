@@ -16,6 +16,8 @@ public class ShareVariable {
 	 public static String GOOGLE_KEY="AIzaSyCYM1UUnXbgP3eD__x2EjIugNOy-vE3McY";
 	 private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
  	 private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+ 	 public static String domain="www.planb-on.com";
+ 	 public static String reportController="/controller/mobile/report.aspx";
 	 public static Location currentLocation=null;
 	 public static LocationListener listener=null;
 	 public static SupportMapFragment mapFr=null;

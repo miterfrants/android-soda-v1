@@ -1,5 +1,8 @@
 package com.planb.soda;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -9,6 +12,8 @@ import android.os.Build.VERSION_CODES;
 import android.os.Debug;
 
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 public class ScrollViewForPlaceItem extends PullToRefreshScrollView{
 	public ScrollViewForPlaceItem(Context context) {
@@ -63,5 +68,17 @@ public class ScrollViewForPlaceItem extends PullToRefreshScrollView{
     	super.onReleaseToRefresh();
     	final ListActivity la = (ListActivity) this.getContext();
     	la.getData(true);
+		
+		String ip = Util.getIPAddress(true);
+		String url="http://"+ShareVariable.domain+ShareVariable.reportController+"?action=add-pull-down&cate="+la.title+"&creator_ip="+ip;
+		AsyncHttpClient client = new AsyncHttpClient();
+ 		client.get(url, new AsyncHttpResponseHandler() {
+		    @Override
+		    public void onSuccess(String response) {
+		    }
+		    @Override
+		    public void onFailure(Throwable e, String response){
+		    }
+		});
     }	
 }

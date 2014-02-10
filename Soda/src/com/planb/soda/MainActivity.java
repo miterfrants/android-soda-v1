@@ -6,6 +6,8 @@ package com.planb.soda;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -21,6 +23,9 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import org.json.*;
 
 //import net.frakbot.imageviewex.ImageViewEx;
@@ -82,6 +87,7 @@ public class MainActivity extends Activity {
 						false));
 				btn.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
+						
 						PlaceCateButton btn = (PlaceCateButton) v;
 						Intent intentMain = new Intent(v.getContext(),
 								com.planb.soda.ListActivity.class);
@@ -90,7 +96,25 @@ public class MainActivity extends Activity {
 						intentMain.putExtra("type", btn.type);
 						intentMain.putExtra("keyword", btn.keyword);
 						intentMain.putExtra("otherSource", btn.otherSource);
+						//sent user research;
+						String ip = Util.getIPAddress(true);
+						String url="http://"+ShareVariable.domain+ShareVariable.reportController+"?action=add-category-count&cate="+btn.title+"&creator_ip="+ip;
+						AsyncHttpClient client = new AsyncHttpClient();
+						Log.d("test","test url:"+url);
+				 		client.get(url, new AsyncHttpResponseHandler() {
+						    @Override
+						    public void onSuccess(String response) {
+						    	Log.d("test","test success");
+						    }
+						    @Override
+						    public void onFailure(Throwable e, String response){
+						    	Log.d("test","test exception"+ e.getMessage());
+						    	e.printStackTrace();
+						    }
+						});
 						v.getContext().startActivity(intentMain);
+						
+
 					}
 				});
 				rl.addView(btn);
