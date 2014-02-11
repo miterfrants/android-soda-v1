@@ -16,7 +16,9 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -41,6 +43,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnClosedListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenedListener;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -57,7 +60,8 @@ public class ListActivity extends FragmentActivity {
 	public int selectedMarkerIndex=-1;
 	public LoadingLayout ldLayout=null;
 	public String title="";
-	 
+	public SlidingMenu slideMenu=null;
+	public boolean isOpenedMap=false;
 	private int screenW=0;
 	private Button btnGetMore;
 	private String urlGet;
@@ -99,7 +103,7 @@ public class ListActivity extends FragmentActivity {
     		toast.show();
 			return;
 		}
-		SlidingMenu slideMenu =(SlidingMenu) this.findViewById(com.planb.soda.R.id.rl_for_activity_list);
+		slideMenu =(SlidingMenu) this.findViewById(com.planb.soda.R.id.rl_for_activity_list);
 		keyword=getIntent().getStringExtra("keyword");
 		type=getIntent().getStringExtra("type");
 		otherSource=getIntent().getStringExtra("otherSource");
@@ -261,15 +265,13 @@ public class ListActivity extends FragmentActivity {
 	    rightView.setLayoutParams(rlpForRightView);
 	    
 	    slideMenu.setMenu(rightView);
-	    //Log.d("test","test class:"+ String.valueOf(slideMenu.getSecondaryMenu().getHeight()));
-		//slideMenu.setSlideDirection(SlideMenu.FLAG_DIRECTION_LEFT);
 	    slideMenu.setMode(SlidingMenu.RIGHT);
 	    slideMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 	    slideMenu.setBehindWidth((int) (ShareVariable.screenW*0.9));
 	    slideMenu.setOnOpenedListener(new OnOpenedListener(){
 			@Override
 			public void onOpened() {
-				// TODO Auto-generated method stub
+				isOpenedMap=true;
 				String ip = Util.getIPAddress(true);
 				String url="http://"+ShareVariable.domain+ShareVariable.reportController+"?action=add-slide-to-map&cate="+title+"&creator_ip="+ip;
 				AsyncHttpClient client = new AsyncHttpClient();
@@ -281,17 +283,59 @@ public class ListActivity extends FragmentActivity {
 				    public void onFailure(Throwable e, String response){
 				    }
 				});
-				
 			}
-	    	
+
 	    });
+	    slideMenu.setOnClosedListener(new OnClosedListener(){
+			@Override
+			public void onClosed() {
+				isOpenedMap=false;
+			}	    
+	    });
+	    
 		ActionBar bar=getActionBar();
 		bar.setDisplayHomeAsUpEnabled(true);
 		title=getIntent().getStringExtra("title");
 		bar.setTitle("Soda | "+getIntent().getStringExtra("title"));
+		
 		getData(true);
 	}
 	
+	
+	//
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{    
+	   
+	   switch (item.getItemId()) 
+	   {        
+	      case android.R.id.home:
+	    	  if(isOpenedMap){
+	    		  slideMenu.showContent();
+	    		  return true;  
+	    	  }
+	         Intent intent = new Intent(this, MainActivity.class);            
+	         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+	         startActivity(intent);            
+	         return true;
+	      default:
+	         return super.onOptionsItemSelected(item);    
+	   }
+	}
+	//if map was expanded then click back button return list view
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        	if(isOpenedMap){
+	    		slideMenu.showContent();
+	    		return true;  
+	    	}
+            startActivity(new  Intent(this, MainActivity.class));
+            finish();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
 	public void getData(final boolean isNew){
 		Thread thread = new Thread()
 		{
@@ -487,11 +531,10 @@ public class ListActivity extends FragmentActivity {
 		    			}else{
 		    				res=jsOtherSource;
 		    			}
-		    			//Log.d("test","test other source: http://"+ ShareVariable.domain+otherSource+"&lat="+String.valueOf(currentLocation.getLatitude())+"&lng="+String.valueOf(currentLocation.getLongitude()));
 		    		}
 		    		generateList(res);
 		    	}catch(Exception ex){
-		    		//ex.printStackTrace();
+		    		ex.printStackTrace();
 		    	}
 		    }
 		    @Override
