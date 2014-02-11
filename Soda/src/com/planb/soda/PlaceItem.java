@@ -90,8 +90,8 @@ public class PlaceItem extends RelativeLayout {
 			}
 			String result = builder.toString();
 
-			JSONObject res = new JSONObject(result);
-			address = res.getString("destination_addresses");
+			JSONObject res = new JSONObject(result);			
+			address = (String) res.getJSONArray("destination_addresses").get(0);
 			JSONArray arrRows = res.getJSONArray("rows");
 			if (arrRows.length() > 0) {
 				JSONArray arrElements = arrRows.getJSONObject(0).getJSONArray(

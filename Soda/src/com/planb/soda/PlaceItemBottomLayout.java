@@ -79,11 +79,16 @@ public class PlaceItemBottomLayout extends RelativeLayout {
             public void onClick(View v) {
             	try{
             		PlaceItem pi= (PlaceItem) v.getParent().getParent();
-                	Intent navigation = new Intent(Intent.ACTION_VIEW, Uri
-                	        .parse("http://maps.google.com/maps?saddr="
-                	                + pi.lat+ ","
-                	                + pi.lng + "&daddr="
-                	                + pi.lat+ "," + pi.lng));
+            		String daddr="";
+            		if(pi.address.length()==0){
+            			daddr= pi.lat+ "," + pi.lng;
+            		}else{
+            			daddr=pi.address;
+            		}
+            		String url="http://maps.google.com/maps?saddr="
+        	                + pi.lat+ ","
+        	                + pi.lng + "&daddr="+daddr;
+                	Intent navigation = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 	navigation.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     navigation.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                     v.getContext().startActivity(navigation);	

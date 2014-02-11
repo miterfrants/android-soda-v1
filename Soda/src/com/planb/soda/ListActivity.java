@@ -515,7 +515,6 @@ public class ListActivity extends FragmentActivity {
 					btn.lat=Double.parseDouble(location.getString("lat"));
 					btn.lng=Double.parseDouble(location.getString("lng"));
 					btn.address=item.getString("vicinity");
-
 					if(item.has("rating")){
 						btn.rateLayout.setRating((float) item.getDouble("rating")/5);
 						btn.rateLayout.txtRate.setText(String.valueOf(item.getDouble("rating")));
