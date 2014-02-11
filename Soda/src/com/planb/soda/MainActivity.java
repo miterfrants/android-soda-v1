@@ -52,8 +52,8 @@ public class MainActivity extends Activity {
 				+ "{\"name\":\"小吃\",\"keyword\":\"小吃\",\"type\":\"\",\"pic\":\"cate_food\",\"bg\":\"\",\"color\":\"#ffb7dd6c\"},"
 				+ "{\"name\":\"景點\",\"keyword\":\"旅遊景點\",\"type\":\"\",\"pic\":\"cate_attraction\",\"bg\":\"tourist-attraction-gray-640x320\",\"color\":\"#ffabd156\"},"
 				+ "{\"name\":\"餐廳\",\"keyword\":\"餐廳\",\"type\":\"\",\"pic\":\"cate_rest\",\"bg\":\"restaurants-gray-640x320.png\",\"color\":\"#ffb4da5f\"},"
-				+ "{\"name\":\"咖啡\",\"keyword\":\"咖啡+茶+簡餐\",\"type\":\"\",\"pic\":\"cate_cafe\",\"bg\":\"coffee-gray-640x320.png\",\"color\":\"#ffabd156\"},"
-				+ "{\"name\":\"ATM\",\"keyword\":\"提款機|郵局\",\"type\":\"\",\"pic\":\"cate_atm\",\"bg\":\"atm-gray-640x320.png\",\"color\":\"#ffbcda78\",\"other-source\":\"/controller/mobile/place.aspx?action=get-atm\"},"
+				+ "{\"name\":\"咖啡\",\"keyword\":\"咖啡%2B茶%2B簡餐\",\"type\":\"\",\"pic\":\"cate_cafe\",\"bg\":\"coffee-gray-640x320.png\",\"color\":\"#ffabd156\"},"
+				+ "{\"name\":\"ATM\",\"keyword\":\"提款機%7C郵局\",\"type\":\"\",\"pic\":\"cate_atm\",\"bg\":\"atm-gray-640x320.png\",\"color\":\"#ffbcda78\",\"other-source\":\"/controller/mobile/place.aspx?action=get-atm\"},"
 				+ "{\"name\":\"旅館\",\"keyword\":\"\",\"type\":\"hotel\",\"pic\":\"cate_hotel\",\"bg\":\"hotel-gray-640x320.png\",\"color\":\"#ffb9dd57\"},"
 				+ "{\"name\":\"加油站\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_gas\",\"bg\":\"hotel-gray-640x320.png\",\"color\":\"#ffb7dd6c\",\"other-source\":\"/controller/mobile/place.aspx?action=get-gas\"},"
 				+ "{\"name\":\"租車\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_rental\",\"bg\":\"hotel-gray-640x320.png\",\"color\":\"#ffabd156\",\"other-source\":\"/controller/mobile/place.aspx?action=get-rental\"}"
@@ -101,7 +101,6 @@ public class MainActivity extends Activity {
 						String ip = Util.getIPAddress(true);
 						String url="http://"+ShareVariable.domain+ShareVariable.reportController+"?action=add-category-count&cate="+btn.title+"&creator_ip="+ip;
 						AsyncHttpClient client = new AsyncHttpClient();
-						Log.d("test","test url:"+url);
 				 		client.get(url, new AsyncHttpResponseHandler() {
 						    @Override
 						    public void onSuccess(String response) {

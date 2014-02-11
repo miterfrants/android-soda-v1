@@ -463,27 +463,35 @@ public class ListActivity extends FragmentActivity {
 		}
 		if(currentLocation ==  null){
 			//peter modify pop up
-			//Log.d("test","test: location is null");
-			//Location is null
 			return;
 		};
 		String urlTempGet =urlGet.replace("{lat}",String.valueOf(currentLocation.getLatitude())).replace("{lng}",String.valueOf( currentLocation.getLongitude()));
 		if(this.token.length()>0){
-			//Log.d("test","test next token:");
 			urlTempGet+="&pagetoken="+this.token;
 		}
+
 		AsyncHttpClient client = new AsyncHttpClient();
-		//Log.d("test","test get more:"+urlTempGet);
  		client.get(urlTempGet, new AsyncHttpResponseHandler() {
 		    @Override
 		    public void onSuccess(String response) {
 		    	try{
-		    		//Log.d("test","test response:"+response);
 		    		JSONObject res=new JSONObject(response);
-		    		
+		    		if(otherSource.length()>0){
+		    			String urlOtherSource="http://"+ ShareVariable.domain+otherSource+"&lat="+String.valueOf(currentLocation.getLatitude())+"&lng="+String.valueOf(currentLocation.getLongitude());
+		    			JSONObject jsOtherSource=new JSONObject(Util.getRemoteString(urlOtherSource));
+		    			JSONArray jsArrayOtherSource=jsOtherSource.getJSONArray("results");
+		    			if(res.getString("status")=="OK" && res.getJSONArray("results").length()>0){
+		    				for(int i=0;i<jsArrayOtherSource.length();i++){
+		    					res.getJSONArray("results").put(jsArrayOtherSource.get(i));
+		    				}
+		    			}else{
+		    				res=jsOtherSource;
+		    			}
+		    			//Log.d("test","test other source: http://"+ ShareVariable.domain+otherSource+"&lat="+String.valueOf(currentLocation.getLatitude())+"&lng="+String.valueOf(currentLocation.getLongitude()));
+		    		}
 		    		generateList(res);
 		    	}catch(Exception ex){
-		    		ex.printStackTrace();
+		    		//ex.printStackTrace();
 		    	}
 		    }
 		    @Override
@@ -507,9 +515,9 @@ public class ListActivity extends FragmentActivity {
 			   
 			   arrRes=res.getJSONArray("results");
 			   for(int i=0;i<arrRes.length();i++){
-				   JSONObject item= arrRes.getJSONObject(i);
-				   JSONObject location=item.getJSONObject("geometry").getJSONObject("location");
-				   PlaceItem btn=new PlaceItem(this.getApplicationContext(),this.getWindow().getWindowManager().getDefaultDisplay().getWidth());
+				   	JSONObject item= arrRes.getJSONObject(i);
+				   	JSONObject location=item.getJSONObject("geometry").getJSONObject("location");
+				   	PlaceItem btn=new PlaceItem(this.getApplicationContext(),this.getWindow().getWindowManager().getDefaultDisplay().getWidth());
 					btn.bottomLayout.title.setText(item.getString("name"));
 					btn.name=item.getString("name");
 					btn.lat=Double.parseDouble(location.getString("lat"));
