@@ -50,13 +50,13 @@ public class MainActivity extends Activity {
 		slideMenu.setContent(sc);
 		String jsonConfig = "{\"cate\":["
 				+ "{\"name\":\"小吃\",\"keyword\":\"小吃\",\"type\":\"\",\"pic\":\"cate_food\",\"bg\":\"\",\"color\":\"#ffb7dd6c\"},"
-				+ "{\"name\":\"景點\",\"keyword\":\"旅遊景點\",\"type\":\"\",\"pic\":\"cate_attraction\",\"bg\":\"tourist-attraction-gray-640x320\",\"color\":\"#ffabd156\"},"
-				+ "{\"name\":\"餐廳\",\"keyword\":\"餐廳\",\"type\":\"\",\"pic\":\"cate_rest\",\"bg\":\"restaurants-gray-640x320.png\",\"color\":\"#ffb4da5f\"},"
-				+ "{\"name\":\"咖啡\",\"keyword\":\"咖啡%2B茶%2B簡餐\",\"type\":\"\",\"pic\":\"cate_cafe\",\"bg\":\"coffee-gray-640x320.png\",\"color\":\"#ffabd156\"},"
-				+ "{\"name\":\"ATM\",\"keyword\":\"提款機%7C郵局\",\"type\":\"\",\"pic\":\"cate_atm\",\"bg\":\"atm-gray-640x320.png\",\"color\":\"#ffbcda78\",\"other-source\":\"/controller/mobile/place.aspx?action=get-atm\"},"
-				+ "{\"name\":\"旅館\",\"keyword\":\"\",\"type\":\"hotel\",\"pic\":\"cate_hotel\",\"bg\":\"hotel-gray-640x320.png\",\"color\":\"#ffb9dd57\"},"
-				+ "{\"name\":\"加油站\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_gas\",\"bg\":\"hotel-gray-640x320.png\",\"color\":\"#ffb7dd6c\",\"other-source\":\"/controller/mobile/place.aspx?action=get-gas\"},"
-				+ "{\"name\":\"租車\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_rental\",\"bg\":\"hotel-gray-640x320.png\",\"color\":\"#ffabd156\",\"other-source\":\"/controller/mobile/place.aspx?action=get-rental\"}"
+				+ "{\"name\":\"景點\",\"keyword\":\"旅遊景點\",\"type\":\"\",\"pic\":\"cate_attraction\",\"bg\":\"tourist_attraction_gray_640x320\",\"color\":\"#ffabd156\"},"
+				+ "{\"name\":\"餐廳\",\"keyword\":\"餐廳\",\"type\":\"\",\"pic\":\"cate_rest\",\"bg\":\"restaurants_gray_640x320\",\"color\":\"#ffb4da5f\"},"
+				+ "{\"name\":\"咖啡\",\"keyword\":\"咖啡%2B茶%2B簡餐\",\"type\":\"\",\"pic\":\"cate_cafe\",\"bg\":\"coffee_gray_640x320\",\"color\":\"#ffabd156\"},"
+				+ "{\"name\":\"ATM\",\"keyword\":\"提款機%7C郵局\",\"type\":\"\",\"pic\":\"cate_atm\",\"bg\":\"atm_gray_640x320\",\"color\":\"#ffbcda78\",\"other-source\":\"/controller/mobile/place.aspx?action=get-atm\"},"
+				+ "{\"name\":\"旅館\",\"keyword\":\"\",\"type\":\"hotel\",\"pic\":\"cate_hotel\",\"bg\":\"\",\"color\":\"#ffb9dd57\"},"
+				+ "{\"name\":\"加油站\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_gas\",\"bg\":\"\",\"color\":\"#ffb7dd6c\",\"other-source\":\"/controller/mobile/place.aspx?action=get-gas\"},"
+				+ "{\"name\":\"租車\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_rental\",\"bg\":\"\",\"color\":\"#ffabd156\",\"other-source\":\"/controller/mobile/place.aspx?action=get-rental\"}"
 				+ "]}";
 		try {
 			JSONObject config = new JSONObject(jsonConfig);
@@ -78,6 +78,7 @@ public class MainActivity extends Activity {
 				btn.keyword = item.getString("keyword");
 				btn.title = item.getString("name");
 				btn.type = item.getString("type");
+				btn.bg=item.getString("bg");
 				if (item.has("other-source")) {
 					btn.otherSource = item.getString("other-source");
 				}
@@ -97,6 +98,7 @@ public class MainActivity extends Activity {
 						intentMain.putExtra("type", btn.type);
 						intentMain.putExtra("keyword", btn.keyword);
 						intentMain.putExtra("otherSource", btn.otherSource);
+						intentMain.putExtra("bg", btn.bg);
 						//sent user research;
 						String ip = Util.getIPAddress(true);
 						String url="http://"+ShareVariable.domain+ShareVariable.reportController+"?action=add-category-count&cate="+btn.title+"&creator_ip="+ip;
@@ -104,7 +106,7 @@ public class MainActivity extends Activity {
 				 		client.get(url, new AsyncHttpResponseHandler() {
 						    @Override
 						    public void onSuccess(String response) {
-						    	Log.d("test","test success");
+						    	//Log.d("test","test success");
 						    }
 						    @Override
 						    public void onFailure(Throwable e, String response){

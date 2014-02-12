@@ -1,5 +1,6 @@
 package com.planb.soda;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,6 +9,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -63,6 +65,7 @@ public class ListActivity extends FragmentActivity {
 	public String title="";
 	public SlidingMenu slideMenu=null;
 	public boolean isOpenedMap=false;
+	public String bg ="";
 	private int screenW=0;
 	private Button btnGetMore;
 	private String urlGet;
@@ -110,6 +113,7 @@ public class ListActivity extends FragmentActivity {
 		keyword=getIntent().getStringExtra("keyword");
 		type=getIntent().getStringExtra("type");
 		otherSource=getIntent().getStringExtra("otherSource");
+		bg=getIntent().getStringExtra("bg");
 		
 		rlForContent.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
 		urlGet="https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
@@ -531,7 +535,6 @@ public class ListActivity extends FragmentActivity {
 		ScaleAnimation sanim= new ScaleAnimation((float) 1,(float) 1.2,(float) 1,(float) 1.2);
 		sanim.setDuration(260);
 		sanim.setFillAfter(true);
-//		Log.d("test","test margin ori:"+-btnGetMore.getHeight());
 		TranslateAnimation  tranAnim=new TranslateAnimation(0, btnGetMore.getHeight(),
 				0,-btnGetMore.getHeight()
 				);
@@ -689,6 +692,12 @@ public class ListActivity extends FragmentActivity {
 						String url ="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+photoRef+"&sensor=false&key="+ShareVariable.GOOGLE_KEY;
 						btn.bg.setTag(url);
 						new DownloadImagesTask().execute(btn.bg);
+					}else{
+						//Log.d("test","test bg:"+bg);
+						if(bg.length()>0){
+							btn.bg.setBackgroundResource(getResources().getIdentifier(bg, "drawable", getPackageName()));
+						}
+						//btn.bg.setBackgroundResource(R.drawable.atm_gray_640x320);
 					}
 					arrListResult.add(btn);
 					btn.buildDist();
