@@ -16,6 +16,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 public class ScrollViewForPlaceItem extends PullToRefreshScrollView{
+	public ScrollView internalScrollView=null;
 	public ScrollViewForPlaceItem(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -33,6 +34,7 @@ public class ScrollViewForPlaceItem extends PullToRefreshScrollView{
                     scrollView = new ScrollView(context, attrs);
             }
             scrollView.setId(com.planb.soda.R.id.scrollview);
+            internalScrollView=scrollView;
             return scrollView;
     }
     final class InternalScrollViewSDK9 extends ScrollView {

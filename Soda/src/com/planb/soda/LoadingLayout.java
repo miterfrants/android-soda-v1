@@ -3,6 +3,8 @@ package com.planb.soda;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,13 +36,50 @@ public class LoadingLayout extends LinearLayout {
 	}
 	
 	public void hide(){
-		txtLoadingStatus.setVisibility(View.INVISIBLE);
-		imgLoading.setVisibility(View.INVISIBLE);
+		this.setVisibility(View.VISIBLE);
+		this.setAlpha(1);
+		AlphaAnimation aanim= new AlphaAnimation((float) 1,(float) 0);
+		aanim.setDuration(260);
+		aanim.setFillAfter(true);
+		this.setAnimation(aanim);
+		final LoadingLayout self=this;
+		aanim.setAnimationListener(new Animation.AnimationListener(){
+		    @Override
+		    public void onAnimationStart(Animation arg0) {
+		    }           
+		    @Override
+		    public void onAnimationRepeat(Animation arg0) {
+		    }      
+		    @Override
+		    public void onAnimationEnd(Animation arg0) {
+		    	self.setAlpha(0);
+		    	self.setVisibility(View.INVISIBLE);
+		    	self.clearAnimation();
+		    }
+		});
 	}
 	
 	public void show(){
-		txtLoadingStatus.setVisibility(View.VISIBLE);
-		imgLoading.setVisibility(View.VISIBLE);
+		this.setVisibility(View.VISIBLE);
+		this.setAlpha(0);
+		AlphaAnimation aanim= new AlphaAnimation((float) 0,(float) 1);
+		aanim.setDuration(260);
+		aanim.setFillAfter(true);
+		this.setAnimation(aanim);
+		final LoadingLayout self=this;
+		aanim.setAnimationListener(new Animation.AnimationListener(){
+		    @Override
+		    public void onAnimationStart(Animation arg0) {
+		    }           
+		    @Override
+		    public void onAnimationRepeat(Animation arg0) {
+		    }      
+		    @Override
+		    public void onAnimationEnd(Animation arg0) {
+		    	self.setAlpha(1);
+		    	self.clearAnimation();
+		    }
+		});
 	}
 
 }

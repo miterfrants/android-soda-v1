@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
@@ -94,6 +95,8 @@ public class ListActivity extends FragmentActivity {
 		rlForContent= new RelativeLayout(this);
 		
 		ldLayout=new LoadingLayout(this);;
+		ldLayout.setAlpha(1.0f);
+		ldLayout.bringToFront();
 		rlForContent.addView(ldLayout);
 
 		LocationManager lm=(LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
@@ -133,11 +136,11 @@ public class ListActivity extends FragmentActivity {
 		btnGetMore.setText("更多");
 		btnGetMore.setSingleLine(true);
 		btnGetMore.setLayoutParams(rlpForBtnGetMore);
-		btnGetMore.setAlpha(0);
+		btnGetMore.setAlpha(0.0f);
 		btnGetMore.setClickable(false);
 		btnGetMore.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
-		    	btnGetMore.setAlpha(0);
+		    	btnGetMore.setAlpha(0.0f);
 		    	btnGetMore.setClickable(false);
 		    	LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
 		    	rlList.removeAllViews();
@@ -165,6 +168,7 @@ public class ListActivity extends FragmentActivity {
 		scForPI.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
 		scForPI.setPersistentDrawingCache(ViewGroup.PERSISTENT_SCROLLING_CACHE);
 		scForPI.setAlwaysDrawnWithCacheEnabled(true);
+		scForPI.setAlpha(0.0f);
 		slideMenu.setContent(rlForContent);
 		RelativeLayout rightView = (RelativeLayout)  LayoutInflater.from(this).inflate(com.planb.soda.R.layout.right_map,null);
 		
@@ -306,7 +310,7 @@ public class ListActivity extends FragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) 
 	{    
-	   
+		
 	   switch (item.getItemId()) 
 	   {        
 	      case android.R.id.home:
@@ -336,7 +340,117 @@ public class ListActivity extends FragmentActivity {
         }
         return super.onKeyUp(keyCode, event);
     }
+    public void hideContent(){
+    	Log.d("test","test hide content");
+    	ldLayout.clearAnimation();
+    	btnGetMore.clearAnimation();
+    	scForPI.clearAnimation();
+    	//這邊沒有work
+		ldLayout.show();
+		
+		scForPI.setAlpha(0.0f);
+		AlphaAnimation aanimForScForPI= new AlphaAnimation(1.0f,0.0f);
+		aanimForScForPI.setDuration(250);
+		aanimForScForPI.setFillAfter(true);
+		aanimForScForPI.setAnimationListener(new Animation.AnimationListener(){
+		    @Override
+		    public void onAnimationStart(Animation arg0) {
+		    }           
+		    @Override
+		    public void onAnimationRepeat(Animation arg0) {
+		    }      
+		    @Override
+		    public void onAnimationEnd(Animation arg0) {
+		    	scForPI.setAlpha(0.0f);
+		    	scForPI.setVisibility(View.INVISIBLE);
+		    	scForPI.clearAnimation();
+		    }
+		});
+		scForPI.setAnimation(aanimForScForPI);
+		
+		if(token.length()>0){
+			btnGetMore.setVisibility(View.VISIBLE);
+			btnGetMore.setAlpha(0.0f);
+			AlphaAnimation aanimForBtnGetMore= new AlphaAnimation((float) 1,(float) 0);
+			aanimForBtnGetMore.setDuration(2000);
+			aanimForBtnGetMore.setFillAfter(true);
+			btnGetMore.setAnimation(aanimForBtnGetMore);
+			aanimForBtnGetMore.setAnimationListener(new Animation.AnimationListener(){
+			    @Override
+			    public void onAnimationStart(Animation arg0) {
+			    }           
+			    @Override
+			    public void onAnimationRepeat(Animation arg0) {
+			    }      
+			    @Override
+			    public void onAnimationEnd(Animation arg0) {
+			    	btnGetMore.setAlpha(0);
+			    	btnGetMore.setVisibility(View.INVISIBLE);
+			    	btnGetMore.clearAnimation();
+			    }
+			});
+		}
+    }
+    
+    public void showContent(boolean isShowGetMore){
+    	ldLayout.clearAnimation();
+    	btnGetMore.clearAnimation();
+    	scForPI.clearAnimation();
+		ldLayout.hide();
+		
+		scForPI.setVisibility(View.VISIBLE);
+		scForPI.setAlpha(1.0f);
+		AlphaAnimation aanimForScForPI= new AlphaAnimation((float) 0.0f,(float) 1.0f);
+		aanimForScForPI.setDuration(500);
+		aanimForScForPI.setFillAfter(true);
+		aanimForScForPI.setAnimationListener(new Animation.AnimationListener(){
+		    @Override
+		    public void onAnimationStart(Animation arg0) {
+		    }           
+		    @Override
+		    public void onAnimationRepeat(Animation arg0) {
+		    }      
+		    @Override
+		    public void onAnimationEnd(Animation arg0) {
+		    	scForPI.setAlpha(1.0f);
+		    	scForPI.setVisibility(View.VISIBLE);
+		    	scForPI.clearAnimation();
+		    }
+		});
+		scForPI.setAnimation(aanimForScForPI);
+		
+	    btnGetMore.bringToFront();
+	    if(isShowGetMore){
+		    btnGetMore.setVisibility(View.VISIBLE);
+		    btnGetMore.setAlpha(1.0f);
+			AlphaAnimation aanimForBtnGetMore= new AlphaAnimation(0.0f, 1.0f);
+			aanimForBtnGetMore.setDuration(500);
+			aanimForBtnGetMore.setFillAfter(true);
+			btnGetMore.setAnimation(aanimForBtnGetMore);
+			aanimForBtnGetMore.setAnimationListener(new Animation.AnimationListener(){
+			    @Override
+			    public void onAnimationStart(Animation arg0) {
+			    }           
+			    @Override
+			    public void onAnimationRepeat(Animation arg0) {
+			    }      
+			    @Override
+			    public void onAnimationEnd(Animation arg0) {
+			    	btnGetMore.setAlpha(1.0f);
+			    	btnGetMore.setVisibility(View.VISIBLE);
+			    	btnGetMore.clearAnimation();
+			    	btnGetMore.setClickable(true);
+			    }
+			});
+	   }else{
+		   btnGetMore.setAlpha(0.0f);
+		   btnGetMore.setClickable(false);
+	   }
+    }
 	public void getData(final boolean isNew){
+		if(!isNew){
+			hideContent();
+		}
 		Thread thread = new Thread()
 		{
 		    @Override
@@ -599,21 +713,6 @@ public class ListActivity extends FragmentActivity {
 			   this.runOnUiThread(new Runnable(){
 				   @Override
 				   public void run(){
-					   btnGetMore.bringToFront();
-					   if(res.has("next_page_token")){
-						   btnGetMore.setAlpha(1);
-						   btnGetMore.setClickable(true);
-						   try {
-								token=res.getString("next_page_token");
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-					   }else{
-						   token="";
-						   btnGetMore.setAlpha(0);
-						   btnGetMore.setClickable(false);
-					   }
 					   LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
 					   rlList.setBackgroundColor(0xFFcccccc);
 					   for(int i=0;i<arrListResult.size();i++){
@@ -631,6 +730,19 @@ public class ListActivity extends FragmentActivity {
 							}
 							rlList.addView(arrListResult.get(i));
 					   }
+					   if(res.has("next_page_token")){
+						   try {
+								token=res.getString("next_page_token");
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						   showContent(true);
+					   }else{
+						   token="";
+						   showContent(false);
+					   }
+					   
 					   if(ShareVariable.arrMarker.size()>0){
 						   ShareVariable.arrMarker.get(0).showInfoWindow();
 					   }
