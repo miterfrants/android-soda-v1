@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
 			for (int i = 0; i < config.getJSONArray("cate").length(); i++) {
 				JSONObject item = (JSONObject) config.getJSONArray("cate").get(
 						i);
-				PlaceCateButton btn = new PlaceCateButton(
+				PlaceCateLayout btn = new PlaceCateLayout(
 						this.getApplicationContext());
 				btn.setBackgroundColor(Color.parseColor(item.getString("color")));
 				RelativeLayout.LayoutParams lpForButton = new RelativeLayout.LayoutParams(
@@ -85,12 +85,16 @@ public class MainActivity extends Activity {
 				int id = getApplicationContext().getResources().getIdentifier(
 						item.getString("pic"), "drawable", getPackageName());
 				Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
-				btn.setImageBitmap(Bitmap.createScaledBitmap(bm, ShareVariable.screenW/6, ShareVariable.screenW/6,
+				btn.cateButton.setBackground(null);
+				btn.cateButton.setImageBitmap(Bitmap.createScaledBitmap(bm, ShareVariable.screenW/6, ShareVariable.screenW/6,
 						false));
-				btn.setOnClickListener(new View.OnClickListener() {
+				btn.txtTitle.setText(item.getString("name"));
+				btn.txtTitle.setTextColor(0xFFFFFFFF);
+				btn.setTxtTopMargin(screenW/2, ShareVariable.screenW/6);
+				btn.cateButton.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						
-						PlaceCateButton btn = (PlaceCateButton) v;
+						PlaceCateLayout btn = (PlaceCateLayout) v.getParent();
 						Intent intentMain = new Intent(v.getContext(),
 								com.planb.soda.ListActivity.class);
 						intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
