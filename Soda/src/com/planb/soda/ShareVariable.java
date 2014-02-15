@@ -34,25 +34,18 @@ public class ShareVariable {
 							// TODO Auto-generated method stub
 							currentLocation=location;
 						}
-
 						@Override
 						public void onProviderDisabled(String provider) {
 							// TODO Auto-generated method stub
-							
 						}
-
 						@Override
 						public void onProviderEnabled(String provider) {
 							// TODO Auto-generated method stub
-							
 						}
-
 						@Override
 						public void onStatusChanged(String provider, int status, Bundle extras) {
 							// TODO Auto-generated method stub
-							
 						}
-
 					};
 				}
 				lm.requestLocationUpdates(
@@ -61,8 +54,7 @@ public class ShareVariable {
 	                    MIN_DISTANCE_CHANGE_FOR_UPDATES, listener);
 				
 				if (lm != null) {
-					currentLocation= lm
-	                        .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+					currentLocation= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	            }
 			}
 			return currentLocation;

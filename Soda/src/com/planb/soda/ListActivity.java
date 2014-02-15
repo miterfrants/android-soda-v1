@@ -1,6 +1,5 @@
 package com.planb.soda;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,8 +8,8 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -77,8 +76,10 @@ public class ListActivity extends FragmentActivity {
 	private ScrollViewForPlaceItem scForPI =null;
 	private GoogleMap map=null;
 	private Button _btnNext=null;
-	private Button _btnPreviouse=null;
+	private Button _btnPrevious =null;
 	private Button _btnTakeMeThere =null;
+    LocationManager lm;
+//    LocationListener ls;
 	
 	public static List<PlaceItem> arrListResult=new ArrayList<PlaceItem>();
 	@Override 
@@ -97,15 +98,16 @@ public class ListActivity extends FragmentActivity {
 		setContentView(com.planb.soda.R.layout.activity_list);
 		rlForContent= new RelativeLayout(this);
 		
-		ldLayout=new LoadingLayout(this);;
+		ldLayout=new LoadingLayout(this);
 		ldLayout.setAlpha(1.0f);
 		ldLayout.bringToFront();
 		rlForContent.addView(ldLayout);
 
-		LocationManager lm=(LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
+		lm = (LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
+
 		currentLocation=ShareVariable.getLocation(lm);
 		if(currentLocation==null){
-			Toast toast = Toast.makeText(this, "請先開啟 GPS 定位功能。", 1000);
+			Toast toast = Toast.makeText(this, "請先確定 GPS 定位已開啟。", Toast.LENGTH_SHORT);
     		toast.show();
 			return;
 		}
@@ -138,6 +140,7 @@ public class ListActivity extends FragmentActivity {
 		}
 		btnGetMore.setTextColor(0xFFFFFFFF);
 		btnGetMore.setText("更多");
+        btnGetMore.setTextSize(14);
 		btnGetMore.setSingleLine(true);
 		btnGetMore.setLayoutParams(rlpForBtnGetMore);
 		btnGetMore.setAlpha(0.0f);
@@ -177,21 +180,21 @@ public class ListActivity extends FragmentActivity {
 		RelativeLayout rightView = (RelativeLayout)  LayoutInflater.from(this).inflate(com.planb.soda.R.layout.right_map,null);
 		
 		//map
-		RelativeLayout.LayoutParams rlForMapPreviouseButton =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-		rlForMapPreviouseButton.height=(int) (screenW*0.15);
-		rlForMapPreviouseButton.width= (int) (screenW*0.15);
-		rlForMapPreviouseButton.topMargin=(int) (screenW*0.0625);
-		rlForMapPreviouseButton.leftMargin=(int) (screenW*0.0625);
-		_btnPreviouse=new Button(this);
-		_btnPreviouse.setLayoutParams(rlForMapPreviouseButton);
-		_btnPreviouse.setBackgroundResource(R.drawable.pre_btn);
-		_btnPreviouse.setOnClickListener(new View.OnClickListener() {
-		    public void onClick(View v) {
-		    	selectPreviouseMarker();
-		    }
-		});
+		RelativeLayout.LayoutParams rlForMapPreviousButton =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+		rlForMapPreviousButton.height=(int) (screenW*0.15);
+		rlForMapPreviousButton.width= (int) (screenW*0.15);
+		rlForMapPreviousButton.topMargin=(int) (screenW*0.0625);
+		rlForMapPreviousButton.leftMargin=(int) (screenW*0.0625);
+		_btnPrevious =new Button(this);
+		_btnPrevious.setLayoutParams(rlForMapPreviousButton);
+		_btnPrevious.setBackgroundResource(R.drawable.pre_btn);
+		_btnPrevious.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                selectPreviousMarker();
+            }
+        });
 		
-		RelativeLayout.LayoutParams rlForMapNextButton =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams rlForMapNextButton = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		_btnNext=new Button(this);
 		rlForMapNextButton =new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlForMapNextButton.height=(int) (screenW*0.15);
@@ -218,8 +221,8 @@ public class ListActivity extends FragmentActivity {
 		rlForMapTakeMeThereButton.rightMargin=(int) (screenW*0.0625);
 		_btnTakeMeThere.setLayoutParams(rlForMapTakeMeThereButton);
 		_btnTakeMeThere.setBackgroundResource(R.drawable.nav_btn);
-		_btnTakeMeThere.setText("導 航");
-		//尺寸調整  16
+		_btnTakeMeThere.setText("導航");
+		_btnTakeMeThere.setTextSize(36);
 
 		if(ShareVariable.screenW==1080){
 			_btnTakeMeThere.setTextSize(20);
@@ -227,7 +230,7 @@ public class ListActivity extends FragmentActivity {
 			_btnTakeMeThere.setTextSize(38);
 		}
 		
-		_btnTakeMeThere.setTextAlignment(View.TEXT_DIRECTION_LTR);
+//		_btnTakeMeThere.setTextAlignment(View.TEXT_DIRECTION_LTR);
 		_btnTakeMeThere.setTextColor(0xFFFFFFFF);
 		_btnTakeMeThere.setPadding(0,0,(int) (screenW*0.339062*0.5),0);
 		_btnTakeMeThere.setOnClickListener(new View.OnClickListener() {
@@ -249,7 +252,7 @@ public class ListActivity extends FragmentActivity {
             	}
             }
         });
-		rightView.addView(_btnPreviouse);
+		rightView.addView(_btnPrevious);
 		rightView.addView(_btnNext);
 		rightView.addView(_btnTakeMeThere);
 		
@@ -258,7 +261,7 @@ public class ListActivity extends FragmentActivity {
 		final SupportMapFragment myMAPF = (SupportMapFragment) myFM
 		                .findFragmentById(R.id.map);
 		map=myMAPF.getMap();
-		if(map!=null){
+        if(map!=null){
 			myMAPF.getMap().getUiSettings().setZoomControlsEnabled(false);
 			setMapCenter(currentLocation.getLatitude(),currentLocation.getLongitude(),15);
 		    map.setOnMarkerClickListener(getMarkerClickListener());
@@ -513,7 +516,7 @@ public class ListActivity extends FragmentActivity {
 		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*selectedMarkerIndex)- screenW*0.2));
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 	}
-	public void selectPreviouseMarker(){
+	public void selectPreviousMarker(){
 		if(this.selectedMarkerIndex==-1){
 			this.selectedMarkerIndex=ShareVariable.arrMarker.size()-1;
 		}else if(this.selectedMarkerIndex==0){
@@ -682,10 +685,12 @@ public class ListActivity extends FragmentActivity {
 					btn.name=item.getString("name");
 					btn.lat=Double.parseDouble(location.getString("lat"));
 					btn.lng=Double.parseDouble(location.getString("lng"));
-					btn.address=item.getString("vicinity");
-					if(item.has("rating")){
+                    btn.rateLayout.setRating(0);
+                    if(item.has("rating")){
 						btn.rateLayout.setRating((float) item.getDouble("rating")/5);
 						btn.rateLayout.txtRate.setText(String.valueOf(item.getDouble("rating")));
+                        btn.rateLayout.txtRate.setTextColor(0xFFFFFFFF);
+                        btn.rateLayout.setBackgroundColor(0xCC999999);
 					}
 					if(item.has("photos")){
 						String photoRef=item.getJSONArray("photos").getJSONObject(0).getString("photo_reference");
@@ -774,6 +779,13 @@ public class ListActivity extends FragmentActivity {
   
     public void onResume() {  
         super.onResume();  
-        ViewServer.get(this).setFocusedWindow(this);  
-   }  
+        ViewServer.get(this).setFocusedWindow(this);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, ShareVariable.listener);
+   }
+    public void onPause(){
+        super.onPause();
+        lm.removeUpdates(ShareVariable.listener);
+//        lm.removeUpdates((android.location.LocationListener) ls);
+//        MyLocationOverlay.disableMylocation();
+    }
 }

@@ -128,5 +128,4 @@ public class PlaceItem extends RelativeLayout {
 			return String.valueOf(res) + " ¤½¤Ø";
 		}
 	}
-
 }

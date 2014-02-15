@@ -49,14 +49,14 @@ public class MainActivity extends Activity {
 		sc.addView(rl);
 		slideMenu.setContent(sc);
 		String jsonConfig = "{\"cate\":["
-				+ "{\"name\":\"小吃\",\"keyword\":\"小吃\",\"type\":\"\",\"pic\":\"cate_food\",\"bg\":\"\",\"color\":\"#ffb7dd6c\"},"
-				+ "{\"name\":\"景點\",\"keyword\":\"旅遊景點\",\"type\":\"\",\"pic\":\"cate_attraction\",\"bg\":\"tourist_attraction_gray_640x320\",\"color\":\"#ffabd156\"},"
-				+ "{\"name\":\"餐廳\",\"keyword\":\"餐廳\",\"type\":\"\",\"pic\":\"cate_rest\",\"bg\":\"restaurants_gray_640x320\",\"color\":\"#ffb4da5f\"},"
-				+ "{\"name\":\"咖啡\",\"keyword\":\"咖啡%2B茶%2B簡餐\",\"type\":\"\",\"pic\":\"cate_cafe\",\"bg\":\"coffee_gray_640x320\",\"color\":\"#ffabd156\"},"
-				+ "{\"name\":\"ATM\",\"keyword\":\"提款機%7C郵局\",\"type\":\"\",\"pic\":\"cate_atm\",\"bg\":\"atm_gray_640x320\",\"color\":\"#ffbcda78\",\"other-source\":\"/controller/mobile/place.aspx?action=get-atm\"},"
-				+ "{\"name\":\"旅館\",\"keyword\":\"\",\"type\":\"hotel\",\"pic\":\"cate_hotel\",\"bg\":\"\",\"color\":\"#ffb9dd57\"},"
-				+ "{\"name\":\"加油站\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_gas\",\"bg\":\"\",\"color\":\"#ffb7dd6c\",\"other-source\":\"/controller/mobile/place.aspx?action=get-gas\"},"
-				+ "{\"name\":\"租車\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_rental\",\"bg\":\"\",\"color\":\"#ffabd156\",\"other-source\":\"/controller/mobile/place.aspx?action=get-rental\"}"
+				+ "{\"name\":\"小吃\",\"keyword\":\"小吃\",\"type\":\"\",\"pic\":\"cate_food\",\"bg\":\"cate_button_food_gray_640x320\",\"color\":\"#ffb7dd6c\"},"
+				+ "{\"name\":\"景點\",\"keyword\":\"旅遊景點\",\"type\":\"\",\"pic\":\"cate_attraction\",\"bg\":\"cate_button_tourist_attraction_gray_640x320\",\"color\":\"#ffabd156\"},"
+				+ "{\"name\":\"餐廳\",\"keyword\":\"餐廳\",\"type\":\"\",\"pic\":\"cate_rest\",\"bg\":\"cate_button_restaurants_gray_640x320\",\"color\":\"#ffb4da5f\"},"
+				+ "{\"name\":\"咖啡\",\"keyword\":\"咖啡%2B茶%2B簡餐\",\"type\":\"\",\"pic\":\"cate_cafe\",\"bg\":\"cate_button_coffee_gray_640x320\",\"color\":\"#ffabd156\"},"
+				+ "{\"name\":\"ATM\",\"keyword\":\"提款機%7C郵局\",\"type\":\"\",\"pic\":\"cate_atm\",\"bg\":\"cate_button_atm_gray_640x320\",\"color\":\"#ffbcda78\",\"other-source\":\"/controller/mobile/place.aspx?action=get-atm\"},"
+				+ "{\"name\":\"旅館\",\"keyword\":\"\",\"type\":\"hotel\",\"pic\":\"cate_hotel\",\"bg\":\"cate_button_hotel_gray_640x320\",\"color\":\"#ffb9dd57\"},"
+				+ "{\"name\":\"加油站\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_gas\",\"bg\":\"cate_button_gas_gray_640x320\",\"color\":\"#ffb7dd6c\",\"other-source\":\"/controller/mobile/place.aspx?action=get-gas\"},"
+				+ "{\"name\":\"租車\",\"keyword\":\"\",\"type\":\"gas\",\"pic\":\"cate_rental\",\"bg\":\"cate_button_car_rental_gray_640x320\",\"color\":\"#ffabd156\",\"other-source\":\"/controller/mobile/place.aspx?action=get-rental\"}"
 				+ "]}";
 		try {
 			JSONObject config = new JSONObject(jsonConfig);
@@ -90,6 +90,7 @@ public class MainActivity extends Activity {
 						false));
 				btn.txtTitle.setText(item.getString("name"));
 				btn.txtTitle.setTextColor(0xFFFFFFFF);
+                btn.txtTitle.setTextSize(22);
 				btn.setTxtTopMargin(screenW/2, ShareVariable.screenW/6);
 				btn.cateButton.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {

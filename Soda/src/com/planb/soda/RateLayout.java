@@ -26,13 +26,10 @@ public class RateLayout extends RelativeLayout {
 		ShapeDrawable rect = new ShapeDrawable(new RoundRectShape(outerR, null, null));
 		rect.setBounds(0, 0, (int) (screenW * 0.21875), (int) (screenW * 0.09375));
 		Paint paint = rect.getPaint();
-		paint.setColor(0xCC999999);		
+		paint.setColor(0x00FFFFFF);
 		this.setBackground(rect);
 
-		
-		
-		LayoutInflater inflater = (LayoutInflater) context
-		        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		    inflater.inflate(com.planb.soda.R.layout.rate_layout, this, true);
 
 		RelativeLayout.LayoutParams rlpForThis = new RelativeLayout.LayoutParams(
@@ -45,9 +42,9 @@ public class RateLayout extends RelativeLayout {
 		rlpForThis.bottomMargin=(int) (ShareVariable.screenW * 0.09375+22);
 		rlpForThis.rightMargin=(int) (22);
 		this.setLayoutParams(rlpForThis);
-		
+
 		rateBar =(RatingBar) ((RelativeLayout) this.getChildAt(0)).getChildAt(1);
-		rateBar.setRating((float) 0.00);		
+		rateBar.setRating((float) 0.00);
 		RelativeLayout.LayoutParams rlpForRateBar= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForRateBar.addRule(RelativeLayout.CENTER_VERTICAL);
 		rlpForRateBar.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -61,7 +58,7 @@ public class RateLayout extends RelativeLayout {
 		rateBar.setLayoutParams(rlpForRateBar);	
 		
 		txtRate =(TextView) ((RelativeLayout) this.getChildAt(0)).getChildAt(0);
-		txtRate.setTextColor(0xFFFFFFFF);
+		txtRate.setTextColor(0x00FFFFFF);
 		txtRate.setText(String.valueOf(rateBar.getRating()));
 		RelativeLayout.LayoutParams rlpForTxtRate= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForTxtRate.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -82,11 +79,8 @@ public class RateLayout extends RelativeLayout {
 		rateBar.bringToFront();
 	}
 	
-
 	public void setRating(float rate){
 		rateBar.setRating(rate);
-		
 		//Log.d("test","test width:" + String.valueOf(rateBar.getVerticalScrollbarWidth()));
 	}
-
 }
