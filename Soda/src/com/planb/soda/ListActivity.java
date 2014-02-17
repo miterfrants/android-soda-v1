@@ -496,6 +496,7 @@ public class ListActivity extends FragmentActivity {
 	        		}
 	        	}
 	        	//Log.d("test","test index:"+ShareVariable.selectedMarkerIndex);
+	        	ShareVariable.isChangeMarkerIndex=false;
 	        	((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((ShareVariable.screenW/2*ShareVariable.selectedMarkerIndex)- ShareVariable.screenW*0.2));
 	        	return false;
 	        }
@@ -518,7 +519,7 @@ public class ListActivity extends FragmentActivity {
 		if(ShareVariable.arrMarker.size()==0){
 			return;
 		}
-		//Log.d("test","test pre selectedMarkerIndex:"+ String.valueOf(ShareVariable.selectedMarkerIndex));
+		Log.d("test","test pre selectedMarkerIndex:"+ String.valueOf(ShareVariable.selectedMarkerIndex));
 		if(ShareVariable.selectedMarkerIndex==-1){
 			ShareVariable.selectedMarkerIndex=0;
 			//Log.d("test","test 1");
@@ -533,6 +534,7 @@ public class ListActivity extends FragmentActivity {
 		Marker marker=ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
 //		Log.d("test","test:" +marker.getTitle());
 		setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
+		ShareVariable.isChangeMarkerIndex=false;
 		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*ShareVariable.selectedMarkerIndex)- screenW*0.2));
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 		marker.showInfoWindow();
@@ -555,6 +557,7 @@ public class ListActivity extends FragmentActivity {
 //		Log.d("test","test:" +marker.getTitle());
 		setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
 		marker.showInfoWindow();
+		ShareVariable.isChangeMarkerIndex=false;
 		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*ShareVariable.selectedMarkerIndex) - screenW*0.2));
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 	}
@@ -737,6 +740,7 @@ public class ListActivity extends FragmentActivity {
 
 						@Override
 						public void onClick(View v) {
+							ShareVariable.isChangeMarkerIndex=false;
 							ShareVariable.selectedMarkerIndex=((PlaceItem) v).index;
 							((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*ShareVariable.selectedMarkerIndex)- screenW*0.2));
 							Marker marker=(Marker) ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
@@ -819,8 +823,9 @@ public class ListActivity extends FragmentActivity {
 	   }
 	   
 	}
-    public void onDestroy() {  
-        super.onDestroy();  
+    public void onDestroy() {
+    	this.finish();
+        super.onDestroy();
         ViewServer.get(this).removeWindow(this);  
    }  
   
@@ -830,7 +835,9 @@ public class ListActivity extends FragmentActivity {
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, ShareVariable.listener);
    }
     public void onPause(){
+    	this.finish();
         super.onPause();
+        
         lm.removeUpdates(ShareVariable.listener);
 //        lm.removeUpdates((android.location.LocationListener) ls);
 //        MyLocationOverlay.disableMylocation();

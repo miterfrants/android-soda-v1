@@ -25,6 +25,7 @@ public class ShareVariable {
 	 public static int screenW=0;
 	 public static int screenH=0;
 	 public static int selectedMarkerIndex=0;
+	 public static boolean isChangeMarkerIndex = true;
 	 public static Location getLocation(LocationManager lm){
 			boolean isGPSEnable= lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
 			if(isGPSEnable){
