@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -59,7 +60,6 @@ public class ListActivity extends FragmentActivity {
 	public String token="";
 	public Location currentLocation=null;
 	public boolean isShowingGetMore=false;
-	public int selectedMarkerIndex=1;
 	public LoadingLayout ldLayout=null;
 	public String title="";
 	public SlidingMenu slideMenu=null;
@@ -236,17 +236,27 @@ public class ListActivity extends FragmentActivity {
 		_btnTakeMeThere.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	try{
-            		Marker marker= ShareVariable.arrMarker.get(selectedMarkerIndex);
+            		Marker marker= ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
+            		String daddr=marker.getSnippet();
+            		if(daddr.length()==0){
+            			daddr=marker.getPosition().latitude +"," + marker.getPosition().longitude;
+            		}
                 	Intent navigation = new Intent(Intent.ACTION_VIEW, Uri
                 	        .parse("http://maps.google.com/maps?saddr="
                 	                + String.valueOf(currentLocation.getLatitude())+ ","
                 	                + String.valueOf(currentLocation.getLongitude()) + "&daddr="
-                	                + marker.getSnippet()));
+                	                + daddr));
+                	Log.d("test","test address:"+"http://maps.google.com/maps?saddr="
+                	                + String.valueOf(currentLocation.getLatitude())+ ","
+                	                + String.valueOf(currentLocation.getLongitude()) + "&daddr="
+                	                + daddr);
+                	
                 	navigation.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     navigation.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                     v.getContext().startActivity(navigation);	
             	}catch(Exception ex){
             		//com.google.android.apps.maps
+            		ex.printStackTrace();
             		Toast toast = Toast.makeText(v.getContext(), "請安裝Google Map，導航功能方能使用。", 1000);
             		toast.show();
             	}
@@ -481,10 +491,11 @@ public class ListActivity extends FragmentActivity {
 	        {
 	        	marker.showInfoWindow();
 	        	for(int i=0;i<ShareVariable.arrMarker.size();i++){
-	        		if(ShareVariable.arrMarker.get(i)==marker){
-	        			selectedMarkerIndex=i;
+	        		if(ShareVariable.arrMarker.get(i).equals(marker)){
+	        			ShareVariable.selectedMarkerIndex=i;
 	        		}
 	        	}
+	        	((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((ShareVariable.screenW/2*ShareVariable.selectedMarkerIndex)- ShareVariable.screenW*0.2));
 	        	return false;
 	        }
 	    };      
@@ -496,7 +507,7 @@ public class ListActivity extends FragmentActivity {
 	    {       
 			@Override
 			public void onMapClick(LatLng point) {
-				selectedMarkerIndex=-1;
+				ShareVariable.selectedMarkerIndex=-1;
 				_btnTakeMeThere.setVisibility(View.INVISIBLE);
 			}
 	    };      
@@ -506,37 +517,44 @@ public class ListActivity extends FragmentActivity {
 		if(ShareVariable.arrMarker.size()==0){
 			return;
 		}
-		if(this.selectedMarkerIndex==-1){
-			this.selectedMarkerIndex=0;
-		}else if(this.selectedMarkerIndex==ShareVariable.arrMarker.size()-1){
-			this.selectedMarkerIndex=0;
+		//Log.d("test","test pre selectedMarkerIndex:"+ String.valueOf(ShareVariable.selectedMarkerIndex));
+		if(ShareVariable.selectedMarkerIndex==-1){
+			ShareVariable.selectedMarkerIndex=0;
+			//Log.d("test","test 1");
+		}else if(ShareVariable.selectedMarkerIndex==ShareVariable.arrMarker.size()-1){
+			ShareVariable.selectedMarkerIndex=0;
+//			Log.d("test","test 2");
 		}else{
-			this.selectedMarkerIndex+=1;
+			ShareVariable.selectedMarkerIndex+=1;
+//			Log.d("test","test 3");
 		}
-		Log.d("test","test selectedMarkerIndex:"+ String.valueOf(selectedMarkerIndex));
-		Marker marker=ShareVariable.arrMarker.get(selectedMarkerIndex);
+//		Log.d("test","test selectedMarkerIndex:"+ String.valueOf(ShareVariable.selectedMarkerIndex));
+		Marker marker=ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
+//		Log.d("test","test:" +marker.getTitle());
 		setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
-		marker.showInfoWindow();
-		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*selectedMarkerIndex)- screenW*0.2));
+		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*ShareVariable.selectedMarkerIndex)- screenW*0.2));
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
+		marker.showInfoWindow();
 	}
 	
 	public void selectPreviousMarker(){
 		if(ShareVariable.arrMarker.size()==0){
 			return;
 		}
-		if(this.selectedMarkerIndex==-1){
-			this.selectedMarkerIndex=ShareVariable.arrMarker.size()-1;
-		}else if(this.selectedMarkerIndex==0){
-			this.selectedMarkerIndex=ShareVariable.arrMarker.size()-1;
+//		Log.d("test","test pre selectedMarkerIndex:"+ String.valueOf(ShareVariable.selectedMarkerIndex));
+		if(ShareVariable.selectedMarkerIndex==-1){
+			ShareVariable.selectedMarkerIndex=ShareVariable.arrMarker.size()-1;
+		}else if(ShareVariable.selectedMarkerIndex==0){
+			ShareVariable.selectedMarkerIndex=ShareVariable.arrMarker.size()-1;
 		}else{
-			this.selectedMarkerIndex-=1;
+			ShareVariable.selectedMarkerIndex-=1;
 		}
-		Log.d("test","test selectedMarkerIndex:"+ String.valueOf(selectedMarkerIndex));
-		Marker marker=ShareVariable.arrMarker.get(selectedMarkerIndex);
+//		Log.d("test","test selectedMarkerIndex:"+ String.valueOf(ShareVariable.selectedMarkerIndex));
+		Marker marker=ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
+//		Log.d("test","test:" +marker.getTitle());
 		setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
 		marker.showInfoWindow();
-		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*selectedMarkerIndex) - screenW*0.2));
+		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*ShareVariable.selectedMarkerIndex) - screenW*0.2));
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 	}
 	public void showButtonGetMore(){
@@ -714,6 +732,18 @@ public class ListActivity extends FragmentActivity {
 					}
 					arrListResult.add(btn);
 					btn.buildDist();
+					btn.setOnClickListener(new OnClickListener(){
+
+						@Override
+						public void onClick(View v) {
+							ShareVariable.selectedMarkerIndex=((PlaceItem) v).index;
+							((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*ShareVariable.selectedMarkerIndex)- screenW*0.2));
+							Marker marker=(Marker) ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
+							setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
+							slideMenu.showMenu();
+						}
+						
+					});
 			   }
 
 			   Collections.sort(arrListResult, new Comparator<PlaceItem>()  {
@@ -740,7 +770,9 @@ public class ListActivity extends FragmentActivity {
 					   for(int i=0;i<arrListResult.size();i++){
 						   RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 							lpForButton.height=screenW/2;
-							arrListResult.get(i).setLayoutParams(lpForButton);
+							PlaceItem btn=(PlaceItem) arrListResult.get(i);
+							btn.index=i;
+							btn.setLayoutParams(lpForButton);
 							LatLng locate=new LatLng(arrListResult.get(i).lat,arrListResult.get(i).lng);
 							if(map != null){
 								Marker marker =map.addMarker(new MarkerOptions()
@@ -748,6 +780,7 @@ public class ListActivity extends FragmentActivity {
 																	.title(arrListResult.get(i).name)
 																	.snippet(arrListResult.get(i).address)
 															);
+								//Log.d("test","test marker:"+arrListResult.get(i).name);
 								ShareVariable.arrMarker.add(marker);
 							}
 							rlList.addView(arrListResult.get(i));

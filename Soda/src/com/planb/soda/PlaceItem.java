@@ -33,7 +33,7 @@ public class PlaceItem extends RelativeLayout {
 	public double dist = 0;
 	public double lat = 0;
 	public double lng = 0;
-
+	public int index=-1;
 	public PlaceItem(Context context, int screenW) {
 		super(context);
 
