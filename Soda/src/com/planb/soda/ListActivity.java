@@ -59,7 +59,7 @@ public class ListActivity extends FragmentActivity {
 	public String token="";
 	public Location currentLocation=null;
 	public boolean isShowingGetMore=false;
-	public int selectedMarkerIndex=-1;
+	public int selectedMarkerIndex=1;
 	public LoadingLayout ldLayout=null;
 	public String title="";
 	public SlidingMenu slideMenu=null;
@@ -348,14 +348,13 @@ public class ListActivity extends FragmentActivity {
         return super.onKeyUp(keyCode, event);
     }
     public void hideContent(){
-    	Log.d("test","test hide content");
     	ldLayout.clearAnimation();
     	btnGetMore.clearAnimation();
     	scForPI.clearAnimation();
     	//這邊沒有work
 		ldLayout.show();
 		
-		scForPI.setAlpha(0.0f);
+		scForPI.setAlpha(1.0f);
 		AlphaAnimation aanimForScForPI= new AlphaAnimation(1.0f,0.0f);
 		aanimForScForPI.setDuration(250);
 		aanimForScForPI.setFillAfter(true);
@@ -455,9 +454,10 @@ public class ListActivity extends FragmentActivity {
 	   }
     }
 	public void getData(final boolean isNew){
-		if(!isNew){
-			hideContent();
-		}
+//		if(!isNew){
+//			
+//		}
+		hideContent();
 		Thread thread = new Thread()
 		{
 		    @Override
@@ -503,6 +503,9 @@ public class ListActivity extends FragmentActivity {
 	}
 	
 	public void selectNextMarker(){
+		if(ShareVariable.arrMarker.size()==0){
+			return;
+		}
 		if(this.selectedMarkerIndex==-1){
 			this.selectedMarkerIndex=0;
 		}else if(this.selectedMarkerIndex==ShareVariable.arrMarker.size()-1){
@@ -510,13 +513,18 @@ public class ListActivity extends FragmentActivity {
 		}else{
 			this.selectedMarkerIndex+=1;
 		}
+		Log.d("test","test selectedMarkerIndex:"+ String.valueOf(selectedMarkerIndex));
 		Marker marker=ShareVariable.arrMarker.get(selectedMarkerIndex);
 		setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
 		marker.showInfoWindow();
 		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*selectedMarkerIndex)- screenW*0.2));
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 	}
+	
 	public void selectPreviousMarker(){
+		if(ShareVariable.arrMarker.size()==0){
+			return;
+		}
 		if(this.selectedMarkerIndex==-1){
 			this.selectedMarkerIndex=ShareVariable.arrMarker.size()-1;
 		}else if(this.selectedMarkerIndex==0){
@@ -524,6 +532,7 @@ public class ListActivity extends FragmentActivity {
 		}else{
 			this.selectedMarkerIndex-=1;
 		}
+		Log.d("test","test selectedMarkerIndex:"+ String.valueOf(selectedMarkerIndex));
 		Marker marker=ShareVariable.arrMarker.get(selectedMarkerIndex);
 		setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
 		marker.showInfoWindow();
@@ -675,7 +684,6 @@ public class ListActivity extends FragmentActivity {
 		   //data prepare
 		   String status =res.getString("status");
 		   if(status.equals("OK")){
-			   
 			   arrRes=res.getJSONArray("results");
 			   for(int i=0;i<arrRes.length();i++){
 				   	JSONObject item= arrRes.getJSONObject(i);
@@ -765,6 +773,10 @@ public class ListActivity extends FragmentActivity {
 			   
 		   }else{
 			   Log.d("test","test:"+ status);
+			   ldLayout.txtLoadingStatus.setText("您所在的位置沒有資料。");
+//			   if(status=="ZERO_RESULT"){
+//				      
+//			   }
 		   }
 	   }catch(Exception ex){
 		   Log.d("test","test:exception occur:" + ex.getMessage());
