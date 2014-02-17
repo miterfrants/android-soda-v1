@@ -495,6 +495,7 @@ public class ListActivity extends FragmentActivity {
 	        			ShareVariable.selectedMarkerIndex=i;
 	        		}
 	        	}
+	        	//Log.d("test","test index:"+ShareVariable.selectedMarkerIndex);
 	        	((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((ShareVariable.screenW/2*ShareVariable.selectedMarkerIndex)- ShareVariable.screenW*0.2));
 	        	return false;
 	        }
@@ -739,6 +740,7 @@ public class ListActivity extends FragmentActivity {
 							ShareVariable.selectedMarkerIndex=((PlaceItem) v).index;
 							((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*ShareVariable.selectedMarkerIndex)- screenW*0.2));
 							Marker marker=(Marker) ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
+							marker.showInfoWindow();
 							setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
 							slideMenu.showMenu();
 						}
