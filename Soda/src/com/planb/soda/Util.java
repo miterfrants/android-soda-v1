@@ -276,4 +276,46 @@ public class Util {
 	    	lm.removeUpdates(lmListener);
 	    	lmListener=null;
 	    }
+	    
+	    public static Location getLocation(Activity context) {
+	    	Location location=null;
+	        try {
+	        	
+	            LocationManager lm= (LocationManager) context
+	                    .getSystemService(Context.LOCATION_SERVICE);
+
+	            // getting GPS status
+	            boolean isGPSEnabled = lm
+	                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+	            // getting network status
+	            boolean isNetworkEnabled = lm
+	                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+	            if (!isGPSEnabled && !isNetworkEnabled) {
+	                // no network provider is enabled
+	            } else {
+	                if (isNetworkEnabled) {
+	                    if (lm != null) {
+	                        location = lm
+	                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+	                    }
+	                }
+	                // if GPS Enabled get lat/long using GPS Services
+	                if (isGPSEnabled) {
+	                    if (location == null) {
+	                        if (lm != null) {
+	                            location = lm 
+	                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+	                        }
+	                    }
+	                }
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	        return location;
+	    }
 }

@@ -90,7 +90,7 @@ public class ListActivity extends FragmentActivity {
 		ShareVariable.arrMarker.clear();
 		arrListResult.clear();
 		super.onCreate(savedInstanceState);
-		Util.checkLocationServices(this);
+		
 		ViewServer.get(this).addWindow(this); 
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 	    StrictMode.setThreadPolicy(policy);
@@ -101,6 +101,8 @@ public class ListActivity extends FragmentActivity {
 		ldLayout.setAlpha(1.0f);
 		ldLayout.bringToFront();
 		rlForContent.addView(ldLayout);
+		Util.checkLocationServices(this);
+		ShareVariable.currentLocation=Util.getLocation(this);
 		if(ShareVariable.currentLocation==null){
 			Toast toast = Toast.makeText(this, "請先確定 GPS 定位已開啟。", Toast.LENGTH_SHORT);
     		toast.show();
