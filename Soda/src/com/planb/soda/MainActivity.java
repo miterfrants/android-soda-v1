@@ -1,14 +1,5 @@
 package com.planb.soda;
 
-//import java.io.ByteArrayOutputStream;
-//import java.io.InputStream;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -28,7 +19,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.*;
 
-//import net.frakbot.imageviewex.ImageViewEx;
 
 @SuppressLint("NewApi")
 public class MainActivity extends Activity {
@@ -42,7 +32,6 @@ public class MainActivity extends Activity {
 		ShareVariable.screenW=screenW;
 		ShareVariable.screenH=screenH;
 		SlidingMenu slideMenu = new SlidingMenu(this);
-		// setContentView(R.layout.activity_main);
 		setContentView(slideMenu);
 		ScrollView sc = new ScrollView(this);
 		RelativeLayout rl = new RelativeLayout(this);
@@ -111,7 +100,6 @@ public class MainActivity extends Activity {
 				 		client.get(url, new AsyncHttpResponseHandler() {
 						    @Override
 						    public void onSuccess(String response) {
-						    	//Log.d("test","test success");
 						    }
 						    @Override
 						    public void onFailure(Throwable e, String response){
@@ -138,16 +126,7 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	public static int getResId(String variableName, Class<?> c) {
-		try {
-			java.lang.reflect.Field idField = c.getDeclaredField(variableName);
-			return idField.getInt(idField);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return -1;
-		}
-	}
-    public void onDestroy() {  
+    public void onDestroy() {
         super.onDestroy();  
         ViewServer.get(this).removeWindow(this);  
    }  

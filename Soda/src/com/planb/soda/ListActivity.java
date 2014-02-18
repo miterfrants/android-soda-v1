@@ -9,7 +9,6 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,7 +32,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -79,8 +77,7 @@ public class ListActivity extends FragmentActivity {
 	private Button _btnPrevious =null;
 	private Button _btnTakeMeThere =null;
     LocationManager lm;
-//    LocationListener ls;
-	
+
 	public static List<PlaceItem> arrListResult=new ArrayList<PlaceItem>();
 	@Override 
 	protected void onStart(){
@@ -168,7 +165,7 @@ public class ListActivity extends FragmentActivity {
 		});
 		rlForContent.addView(btnGetMore);
 		//hideButtonGetMore(0);
-		
+
 		//list containerscForPI
 		this.scForPI =(ScrollViewForPlaceItem) LayoutInflater.from(this).inflate(com.planb.soda.R.layout.scroll_view_for_place_item,null);
 		rlForContent.addView(scForPI);
@@ -230,7 +227,6 @@ public class ListActivity extends FragmentActivity {
 			_btnTakeMeThere.setTextSize(38);
 		}
 		
-//		_btnTakeMeThere.setTextAlignment(View.TEXT_DIRECTION_LTR);
 		_btnTakeMeThere.setTextColor(0xFFFFFFFF);
 		_btnTakeMeThere.setPadding(0,0,(int) (screenW*0.339062*0.5),0);
 		_btnTakeMeThere.setOnClickListener(new View.OnClickListener() {
@@ -255,9 +251,8 @@ public class ListActivity extends FragmentActivity {
                     navigation.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                     v.getContext().startActivity(navigation);	
             	}catch(Exception ex){
-            		//com.google.android.apps.maps
             		ex.printStackTrace();
-            		Toast toast = Toast.makeText(v.getContext(), "請安裝Google Map，導航功能方能使用。", 1000);
+            		Toast toast = Toast.makeText(v.getContext(), "請安裝Google Map，導航功能方能使用。", Toast.LENGTH_SHORT);
             		toast.show();
             	}
             }
@@ -277,7 +272,7 @@ public class ListActivity extends FragmentActivity {
 		    map.setOnMarkerClickListener(getMarkerClickListener());
 		    map.setOnMapClickListener(getMapClickListener());
 		}else{
-			Toast toast = Toast.makeText(this, "無法使用您的Google Map，麻煩您更新。", 1000);
+			Toast toast = Toast.makeText(this, "無法使用您的Google Map，麻煩您更新。", Toast.LENGTH_SHORT);
     		toast.show();
 		}
 	    RelativeLayout.LayoutParams rlpForRightView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -322,8 +317,6 @@ public class ListActivity extends FragmentActivity {
 		getData(true);
 	}
 	
-	
-	//
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) 
 	{    
@@ -464,9 +457,6 @@ public class ListActivity extends FragmentActivity {
 	   }
     }
 	public void getData(final boolean isNew){
-//		if(!isNew){
-//			
-//		}
 		hideContent();
 		Thread thread = new Thread()
 		{
@@ -497,7 +487,7 @@ public class ListActivity extends FragmentActivity {
 	        	}
 	        	//Log.d("test","test index:"+ShareVariable.selectedMarkerIndex);
 	        	ShareVariable.isChangeMarkerIndex=false;
-	        	((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((ShareVariable.screenW/2*ShareVariable.selectedMarkerIndex)- ShareVariable.screenW*0.2));
+	        	((FrameLayout)scForPI.getChildAt(1)).getChildAt(0).scrollTo(0, (int) ((ShareVariable.screenW / 2 * ShareVariable.selectedMarkerIndex) - ShareVariable.screenW * 0.2));
 	        	return false;
 	        }
 	    };      
@@ -522,20 +512,15 @@ public class ListActivity extends FragmentActivity {
 		Log.d("test","test pre selectedMarkerIndex:"+ String.valueOf(ShareVariable.selectedMarkerIndex));
 		if(ShareVariable.selectedMarkerIndex==-1){
 			ShareVariable.selectedMarkerIndex=0;
-			//Log.d("test","test 1");
 		}else if(ShareVariable.selectedMarkerIndex==ShareVariable.arrMarker.size()-1){
 			ShareVariable.selectedMarkerIndex=0;
-//			Log.d("test","test 2");
 		}else{
 			ShareVariable.selectedMarkerIndex+=1;
-//			Log.d("test","test 3");
 		}
-//		Log.d("test","test selectedMarkerIndex:"+ String.valueOf(ShareVariable.selectedMarkerIndex));
 		Marker marker=ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
-//		Log.d("test","test:" +marker.getTitle());
 		setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
 		ShareVariable.isChangeMarkerIndex=false;
-		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*ShareVariable.selectedMarkerIndex)- screenW*0.2));
+		((FrameLayout)scForPI.getChildAt(1)).getChildAt(0).scrollTo(0, (int) ((screenW / 2 * ShareVariable.selectedMarkerIndex) - screenW * 0.2));
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 		marker.showInfoWindow();
 	}
@@ -544,7 +529,6 @@ public class ListActivity extends FragmentActivity {
 		if(ShareVariable.arrMarker.size()==0){
 			return;
 		}
-//		Log.d("test","test pre selectedMarkerIndex:"+ String.valueOf(ShareVariable.selectedMarkerIndex));
 		if(ShareVariable.selectedMarkerIndex==-1){
 			ShareVariable.selectedMarkerIndex=ShareVariable.arrMarker.size()-1;
 		}else if(ShareVariable.selectedMarkerIndex==0){
@@ -552,13 +536,11 @@ public class ListActivity extends FragmentActivity {
 		}else{
 			ShareVariable.selectedMarkerIndex-=1;
 		}
-//		Log.d("test","test selectedMarkerIndex:"+ String.valueOf(ShareVariable.selectedMarkerIndex));
 		Marker marker=ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
-//		Log.d("test","test:" +marker.getTitle());
 		setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
 		marker.showInfoWindow();
 		ShareVariable.isChangeMarkerIndex=false;
-		((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*ShareVariable.selectedMarkerIndex) - screenW*0.2));
+		((FrameLayout)scForPI.getChildAt(1)).getChildAt(0).scrollTo(0, (int) ((screenW / 2 * ShareVariable.selectedMarkerIndex) - screenW * 0.2));
 		_btnTakeMeThere.setVisibility(View.VISIBLE);
 	}
 	public void showButtonGetMore(){
@@ -591,11 +573,10 @@ public class ListActivity extends FragmentActivity {
 
 		    @Override
 		    public void onAnimationEnd(Animation arg0) {
-		    	RelativeLayout.LayoutParams lp=(RelativeLayout.LayoutParams) btnGetMore.getLayoutParams();
+		    	RelativeLayout.LayoutParams lp;
 		    	btnGetMore.clearAnimation();
-		    	lp=(RelativeLayout.LayoutParams) btnGetMore.getLayoutParams();
 		    	lp=(LayoutParams) btnGetMore.getLayoutParams();
-		    	lp.width=(int) (screenW*0.145*0.8*1.2);
+                lp.width=(int) (screenW*0.145*0.8*1.2);
     			lp.height=(int) (screenW*0.145*0.8*1.2);
     			lp.bottomMargin=(int) (screenW*0.145*0.8/2);
     			lp.leftMargin=(int) (screenW*0.145*0.8/2);
@@ -699,7 +680,6 @@ public class ListActivity extends FragmentActivity {
 	    CameraUpdate zoom=CameraUpdateFactory.zoomTo(zoomLevel);
 		map.moveCamera(zoom);
 	    map.animateCamera(center,280,null);
-	    
 	}
 	public void generateList(final JSONObject res){
 	   try{
@@ -728,11 +708,9 @@ public class ListActivity extends FragmentActivity {
 						btn.bg.setTag(url);
 						new DownloadImagesTask().execute(btn.bg);
 					}else{
-						//Log.d("test","test bg:"+bg);
 						if(bg.length()>0){
 							btn.bg.setBackgroundResource(getResources().getIdentifier(bg, "drawable", getPackageName()));
 						}
-						//btn.bg.setBackgroundResource(R.drawable.atm_gray_640x320);
 					}
 					arrListResult.add(btn);
 					btn.buildDist();
@@ -742,8 +720,8 @@ public class ListActivity extends FragmentActivity {
 						public void onClick(View v) {
 							ShareVariable.isChangeMarkerIndex=false;
 							ShareVariable.selectedMarkerIndex=((PlaceItem) v).index;
-							((ScrollView) ((FrameLayout)scForPI.getChildAt(1)).getChildAt(0)).scrollTo(0,(int) ((screenW/2*ShareVariable.selectedMarkerIndex)- screenW*0.2));
-							Marker marker=(Marker) ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
+							((FrameLayout)scForPI.getChildAt(1)).getChildAt(0).scrollTo(0, (int) ((screenW / 2 * ShareVariable.selectedMarkerIndex) - screenW * 0.2));
+							Marker marker= ShareVariable.arrMarker.get(ShareVariable.selectedMarkerIndex);
 							marker.showInfoWindow();
 							setMapCenter(marker.getPosition().latitude,marker.getPosition().longitude,15);
 							slideMenu.showMenu();
@@ -765,8 +743,7 @@ public class ListActivity extends FragmentActivity {
 			        	}
 			        }
 			    });
-			   
-			   
+
 			   //ui 
 			   this.runOnUiThread(new Runnable(){
 				   @Override
@@ -786,7 +763,6 @@ public class ListActivity extends FragmentActivity {
 																	.title(arrListResult.get(i).name)
 																	.snippet(arrListResult.get(i).address)
 															);
-								//Log.d("test","test marker:"+arrListResult.get(i).name);
 								ShareVariable.arrMarker.add(marker);
 							}
 							rlList.addView(arrListResult.get(i));
@@ -813,23 +789,18 @@ public class ListActivity extends FragmentActivity {
 		   }else{
 			   Log.d("test","test:"+ status);
 			   ldLayout.txtLoadingStatus.setText("您所在的位置沒有資料。");
-//			   if(status=="ZERO_RESULT"){
-//				      
-//			   }
 		   }
 	   }catch(Exception ex){
 		   Log.d("test","test:exception occur:" + ex.getMessage());
 		   ex.printStackTrace();
 	   }
-	   
 	}
     public void onDestroy() {
     	this.finish();
         super.onDestroy();
         ViewServer.get(this).removeWindow(this);  
    }  
-  
-    public void onResume() {  
+    public void onResume() {
         super.onResume();  
         ViewServer.get(this).setFocusedWindow(this);
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, ShareVariable.listener);
@@ -837,9 +808,6 @@ public class ListActivity extends FragmentActivity {
     public void onPause(){
     	this.finish();
         super.onPause();
-        
         lm.removeUpdates(ShareVariable.listener);
-//        lm.removeUpdates((android.location.LocationListener) ls);
-//        MyLocationOverlay.disableMylocation();
     }
 }
