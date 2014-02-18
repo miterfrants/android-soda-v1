@@ -233,14 +233,6 @@ public class Util {
 	            dialog.show();
 
 	        }
-	       lmListener=Util.getNewListener();
-	       if(gps_enabled){
-	    	   lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,5,lmListener);
-	    	   ShareVariable.currentLocation= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-	       }else{
-	    	   lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,200,5,lmListener);
-	    	   ShareVariable.currentLocation= lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-	       }
 	 }
 	 public static LocationListener getNewListener(){
 	    	return new LocationListener(){
@@ -279,9 +271,10 @@ public class Util {
 	    
 	    public static Location getLocation(Activity context) {
 	    	Location location=null;
+	    	lmListener=Util.getNewListener();
 	        try {
 	        	
-	            LocationManager lm= (LocationManager) context
+	            lm= (LocationManager) context
 	                    .getSystemService(Context.LOCATION_SERVICE);
 
 	            // getting GPS status
@@ -296,7 +289,9 @@ public class Util {
 	                // no network provider is enabled
 	            } else {
 	                if (isNetworkEnabled) {
+	                	
 	                    if (lm != null) {
+	                    	lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,200,5,lmListener);
 	                        location = lm
 	                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 	                    }
@@ -305,6 +300,7 @@ public class Util {
 	                if (isGPSEnabled) {
 	                    if (location == null) {
 	                        if (lm != null) {
+	                        	lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,5,lmListener);
 	                            location = lm 
 	                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	                        }

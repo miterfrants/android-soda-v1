@@ -30,8 +30,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//enable location services
-		Util.checkLocationServices(this);
 		ViewServer.get(this).addWindow(this); 
 		int screenW = getWindowManager().getDefaultDisplay().getWidth();
 		int screenH = getWindowManager().getDefaultDisplay().getHeight();
@@ -138,15 +136,11 @@ public class MainActivity extends Activity {
           
    }  
     public void onPause(){
-    	Util.stopUpdateLocation();
     	super.onPause();
     }
     
     public void onResume() {  
         super.onResume();
-        if(Util.lmListener==null){
-        	Util.checkLocationServices(this);
-        }
    }
 
 }
