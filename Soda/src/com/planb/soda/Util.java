@@ -233,7 +233,7 @@ public class Util {
 					//Log.d("test","test onStatusChanged");
 				}
 	        };
-	        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,0,locationListener);
+	        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,5,locationListener);
 	        gps_enabled=false;
 	        network_enabled =false;
 	        try{
