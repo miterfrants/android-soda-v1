@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -99,10 +100,10 @@ public class ListActivity extends FragmentActivity {
 		ldLayout.setAlpha(1.0f);
 		ldLayout.bringToFront();
 		rlForContent.addView(ldLayout);
-
+		//cate page check location service enable or not 
+		//this block check again
 		lm = (LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
-
-		currentLocation=ShareVariable.getLocation(lm);
+		currentLocation=Util.getLocation(lm);
 		if(currentLocation==null){
 			Toast toast = Toast.makeText(this, "請先確定 GPS 定位已開啟。", Toast.LENGTH_SHORT);
     		toast.show();

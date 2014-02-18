@@ -26,6 +26,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//enable location services
+		Util.checkLocationServices(this);
 		ViewServer.get(this).addWindow(this); 
 		int screenW = getWindowManager().getDefaultDisplay().getWidth();
 		int screenH = getWindowManager().getDefaultDisplay().getHeight();

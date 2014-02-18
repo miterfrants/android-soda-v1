@@ -21,11 +21,22 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.util.InetAddressUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 
 public class Util {
 	public static String tag="com.planb.soda.Util";
-
+	public static LocationListener listener=null;
     /**
      * Convert byte array to hex string
      * @param bytes
@@ -184,4 +195,76 @@ public class Util {
         }
         return sb.toString();
     }
+	 public static Location getLocation(LocationManager lm){
+			return ShareVariable.currentLocation;
+		}
+	 
+	 public static void checkLocationServices(final Activity context){
+		 LocationManager lm = null;
+	     boolean gps_enabled,network_enabled;
+	        if(lm==null){
+	        	lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+	        }
+	        LocationListener locationListener=new LocationListener(){
+
+				@Override
+				public void onLocationChanged(Location location) {
+					// TODO Auto-generated method stub
+					//Log.d("test","test onLocationChanged");		
+					ShareVariable.currentLocation
+				}
+
+				@Override
+				public void onProviderDisabled(String provider) {
+					// TODO Auto-generated method stub
+					Log.d("test","test onProviderDisabled");
+				}
+
+				@Override
+				public void onProviderEnabled(String provider) {
+					// TODO Auto-generated method stub
+					Log.d("test","test onProviderEnabled");
+				}
+
+				@Override
+				public void onStatusChanged(String provider, int status,
+						Bundle extras) {
+					// TODO Auto-generated method stub
+					Log.d("test","test onStatusChanged");
+				}
+	        };
+	        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,0,locationListener);
+	        gps_enabled=false;
+	        network_enabled =false;
+	        try{
+	        	gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+	        }catch(Exception ex){}
+	        
+	        try{
+	        	network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+	        }catch(Exception ex){}
+	       if(!gps_enabled && !network_enabled){
+	    	   Builder dialog = new AlertDialog.Builder(context);
+	            dialog.setMessage("GPS 未開啟");
+	            dialog.setPositiveButton("開啟", new DialogInterface.OnClickListener() {
+	                @Override
+	                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+	                    // TODO Auto-generated method stub
+	                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+	                    context.startActivity(myIntent);
+	                    //get gps
+	                }
+	            });
+	            dialog.setNegativeButton("關閉", new DialogInterface.OnClickListener() {
+
+	                @Override
+	                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+	                    // TODO Auto-generated method stub
+
+	                }
+	            });
+	            dialog.show();
+
+	        }
+	 }
 }
