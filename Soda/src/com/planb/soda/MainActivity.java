@@ -1,5 +1,8 @@
 package com.planb.soda;
 
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,7 +25,8 @@ import org.json.*;
 
 @SuppressLint("NewApi")
 public class MainActivity extends Activity {
-
+	public LocationManager lm=null;
+	public LocationListener lmListener=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -134,12 +138,15 @@ public class MainActivity extends Activity {
           
    }  
     public void onPause(){
-    	Util.stopUpdateLocation(this);
+    	Util.stopUpdateLocation();
     	super.onPause();
     }
+    
     public void onResume() {  
-        super.onResume();  
-        ViewServer.get(this).setFocusedWindow(this);
-        Util.checkLocationServices(this);
-   }  
+        super.onResume();
+        if(Util.lmListener==null){
+        	Util.checkLocationServices(this);
+        }
+   }
+
 }

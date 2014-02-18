@@ -57,7 +57,6 @@ import org.json.JSONObject;
 @SuppressLint("InlinedApi")
 public class ListActivity extends FragmentActivity {
 	public String token="";
-	public Location currentLocation=null;
 	public boolean isShowingGetMore=false;
 	public LoadingLayout ldLayout=null;
 	public String title="";
@@ -77,7 +76,8 @@ public class ListActivity extends FragmentActivity {
 	private Button _btnNext=null;
 	private Button _btnPrevious =null;
 	private Button _btnTakeMeThere =null;
-    LocationManager lm;
+    public LocationManager lm=null;
+    public LocationListener lmListener=null;
 
 	public static List<PlaceItem> arrListResult=new ArrayList<PlaceItem>();
 	@Override 
@@ -90,6 +90,7 @@ public class ListActivity extends FragmentActivity {
 		ShareVariable.arrMarker.clear();
 		arrListResult.clear();
 		super.onCreate(savedInstanceState);
+		Util.checkLocationServices(this);
 		ViewServer.get(this).addWindow(this); 
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 	    StrictMode.setThreadPolicy(policy);
@@ -103,8 +104,8 @@ public class ListActivity extends FragmentActivity {
 		//cate page check location service enable or not 
 		//this block check again
 		lm = (LocationManager) this.getApplicationContext().getSystemService(LOCATION_SERVICE);
-		currentLocation=Util.getLocation(lm);
-		if(currentLocation==null){
+		Util.getLocation(lm);
+		if(ShareVariable.currentLocation==null){
 			Toast toast = Toast.makeText(this, "請先確定 GPS 定位已開啟。", Toast.LENGTH_SHORT);
     		toast.show();
 			return;
@@ -240,13 +241,13 @@ public class ListActivity extends FragmentActivity {
             		}
                 	Intent navigation = new Intent(Intent.ACTION_VIEW, Uri
                 	        .parse("http://maps.google.com/maps?saddr="
-                	                + String.valueOf(currentLocation.getLatitude())+ ","
-                	                + String.valueOf(currentLocation.getLongitude()) + "&daddr="
+                	                + String.valueOf(ShareVariable.currentLocation.getLatitude())+ ","
+                	                + String.valueOf(ShareVariable.currentLocation.getLongitude()) + "&daddr="
                 	                + daddr));
-                	Log.d("test","test address:"+"http://maps.google.com/maps?saddr="
-                	                + String.valueOf(currentLocation.getLatitude())+ ","
-                	                + String.valueOf(currentLocation.getLongitude()) + "&daddr="
-                	                + daddr);
+//                	Log.d("test","test address:"+"http://maps.google.com/maps?saddr="
+//                	                + String.valueOf(currentLocation.getLatitude())+ ","
+//                	                + String.valueOf(currentLocation.getLongitude()) + "&daddr="
+//                	                + daddr);
                 	
                 	navigation.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     navigation.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
@@ -269,7 +270,7 @@ public class ListActivity extends FragmentActivity {
 		map=myMAPF.getMap();
         if(map!=null){
 			myMAPF.getMap().getUiSettings().setZoomControlsEnabled(false);
-			setMapCenter(currentLocation.getLatitude(),currentLocation.getLongitude(),15);
+			setMapCenter(ShareVariable.currentLocation.getLatitude(),ShareVariable.currentLocation.getLongitude(),15);
 		    map.setOnMarkerClickListener(getMarkerClickListener());
 		    map.setOnMapClickListener(getMapClickListener());
 		}else{
@@ -639,11 +640,11 @@ public class ListActivity extends FragmentActivity {
 			this.token="";
 			this.arrListResult.clear();
 		}
-		if(currentLocation ==  null){
+		if(ShareVariable.currentLocation ==  null){
 			//peter modify pop up
 			return;
 		};
-		String urlTempGet =urlGet.replace("{lat}",String.valueOf(currentLocation.getLatitude())).replace("{lng}",String.valueOf( currentLocation.getLongitude()));
+		String urlTempGet =urlGet.replace("{lat}",String.valueOf(ShareVariable.currentLocation.getLatitude())).replace("{lng}",String.valueOf( ShareVariable.currentLocation.getLongitude()));
 		if(this.token.length()>0){
 			urlTempGet+="&pagetoken="+this.token;
 		}
@@ -655,7 +656,7 @@ public class ListActivity extends FragmentActivity {
 		    	try{
 		    		JSONObject res=new JSONObject(response);
 		    		if(otherSource.length()>0){
-		    			String urlOtherSource="http://"+ ShareVariable.domain+otherSource+"&lat="+String.valueOf(currentLocation.getLatitude())+"&lng="+String.valueOf(currentLocation.getLongitude());
+		    			String urlOtherSource="http://"+ ShareVariable.domain+otherSource+"&lat="+String.valueOf(ShareVariable.currentLocation.getLatitude())+"&lng="+String.valueOf(ShareVariable.currentLocation.getLongitude());
 		    			JSONObject jsOtherSource=new JSONObject(Util.getRemoteString(urlOtherSource));
 		    			JSONArray jsArrayOtherSource=jsOtherSource.getJSONArray("results");
 		    			if(res.getString("status")=="OK" && res.getJSONArray("results").length()>0){
@@ -801,15 +802,16 @@ public class ListActivity extends FragmentActivity {
 	   }
 	}
     public void onDestroy() {
-    	this.finish();
         super.onDestroy();  
    }  
     public void onResume() {
         super.onResume();  
-        Util.checkLocationServices(this);
+        if(Util.lmListener==null){
+        	Util.checkLocationServices(this);
+        }
    }
     public void onPause(){
+    	Util.stopUpdateLocation();
         super.onPause();
-        Util.stopUpdateLocation(this);
     }
 }

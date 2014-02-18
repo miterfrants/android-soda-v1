@@ -9,9 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -27,7 +25,6 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.GpsStatus.Listener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -37,7 +34,7 @@ import android.util.Log;
 
 public class Util {
 	public static String tag="com.planb.soda.Util";
-	public static LocationListener listener=null;
+	public static LocationListener lmListener=null;
 	public static LocationManager lm=null;
     /**
      * Convert byte array to hex string
@@ -203,45 +200,16 @@ public class Util {
 	 
 	 public static void checkLocationServices(final Activity context){
 	     boolean gps_enabled,network_enabled;
-	        if(lm==null){
-	        	lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-	        }
-	        listener=new LocationListener(){
-				@Override
-				public void onLocationChanged(Location location) {
-					// TODO Auto-generated method stub		
-					ShareVariable.currentLocation=location;
-				}
-
-				@Override
-				public void onProviderDisabled(String provider) {
-					// TODO Auto-generated method stub
-					Log.d("test","test onProviderDisabled");
-				}
-
-				@Override
-				public void onProviderEnabled(String provider) {
-					// TODO Auto-generated method stub
-					Log.d("test","test onProviderEnabled");
-				}
-
-				@Override
-				public void onStatusChanged(String provider, int status,
-						Bundle extras) {
-					// TODO Auto-generated method stub
-					Log.d("test","test onStatusChanged");
-				}
-	        };
-	        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,5,listener);
-	        gps_enabled=false;
-	        network_enabled =false;
-	        try{
+     	 lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+     	 gps_enabled=false;
+	     network_enabled =false;
+	     try{
 	        	gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-	        }catch(Exception ex){}
+	     }catch(Exception ex){}
 	        
-	        try{
+	     try{
 	        	network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-	        }catch(Exception ex){}
+	      }catch(Exception ex){}
 	       if(!gps_enabled && !network_enabled){
 	    	   Builder dialog = new AlertDialog.Builder(context);
 	            dialog.setMessage("GPS ¥¼¶}±Ò");
@@ -265,18 +233,43 @@ public class Util {
 	            dialog.show();
 
 	        }
+	       lmListener=Util.getNewListener();
+	       lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,5,lmListener);
 	 }
-	 public static void stopUpdateLocation(Activity context){
-		 try{
-			 if(lm==null){
-				 lm =(LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-			 }
-			 if(listener!=null){
-			 	lm.removeUpdates(listener);
-			 }
-		 }catch(Exception ex){
-			 ex.printStackTrace();
-		 }
-		
-	 }
+	 
+	    public static LocationListener getNewListener(){
+	    	return new LocationListener(){
+
+				@Override
+				public void onLocationChanged(Location location) {
+					// TODO Auto-generated method stub
+					ShareVariable.currentLocation=location;
+					
+				}
+
+				@Override
+				public void onProviderDisabled(String provider) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onProviderEnabled(String provider) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onStatusChanged(String provider, int status,
+						Bundle extras) {
+					// TODO Auto-generated method stub
+					
+				}
+	    		
+	    	};
+	    }
+	    public static void stopUpdateLocation(){
+	    	lm.removeUpdates(lmListener);
+	    	lmListener=null;
+	    }
 }
