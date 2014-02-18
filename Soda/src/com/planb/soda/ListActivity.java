@@ -89,6 +89,7 @@ public class ListActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		ShareVariable.arrMarker.clear();
 		arrListResult.clear();
+		
 		super.onCreate(savedInstanceState);
 		
 		ViewServer.get(this).addWindow(this); 
@@ -96,7 +97,7 @@ public class ListActivity extends FragmentActivity {
 	    StrictMode.setThreadPolicy(policy);
 		setContentView(com.planb.soda.R.layout.activity_list);
 		rlForContent= new RelativeLayout(this);
-		
+
 		ldLayout=new LoadingLayout(this);
 		ldLayout.setAlpha(1.0f);
 		ldLayout.bringToFront();
@@ -753,7 +754,9 @@ public class ListActivity extends FragmentActivity {
 				   @Override
 				   public void run(){
 					   LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
+					   
 					   rlList.setBackgroundColor(0xFFcccccc);
+					   rlList.removeAllViews();
 					   for(int i=0;i<arrListResult.size();i++){
 						   RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 							lpForButton.height=screenW/2;
@@ -769,7 +772,14 @@ public class ListActivity extends FragmentActivity {
 															);
 								ShareVariable.arrMarker.add(marker);
 							}
-							rlList.addView(arrListResult.get(i));
+							try{
+								rlList.addView(arrListResult.get(i));
+							}catch(Exception ex){
+								rlList.removeView(arrListResult.get(i));
+								rlList.addView(arrListResult.get(i));
+								
+							}
+							
 					   }
 					   if(res.has("next_page_token")){
 						   try {
@@ -800,6 +810,8 @@ public class ListActivity extends FragmentActivity {
 	   }
 	}
     public void onDestroy() {
+    	LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
+    	rlList.removeAllViews();
         super.onDestroy();  
    }  
     public void onResume() {
