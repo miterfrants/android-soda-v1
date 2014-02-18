@@ -805,7 +805,7 @@ public class ListActivity extends FragmentActivity {
     public void onResume() {
         super.onResume();  
         if(Util.lmListener==null){
-        	Util.checkLocationServices(this);
+        	ShareVariable.currentLocation=Util.getLocation(this);
         }
    }
     public void onPause(){

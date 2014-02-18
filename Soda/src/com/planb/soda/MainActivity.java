@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
 		ViewServer.get(this).addWindow(this); 
 		int screenW = getWindowManager().getDefaultDisplay().getWidth();
 		int screenH = getWindowManager().getDefaultDisplay().getHeight();
+		Util.checkLocationServices(this);
 		ShareVariable.screenW=screenW;
 		ShareVariable.screenH=screenH;
 		SlidingMenu slideMenu = new SlidingMenu(this);

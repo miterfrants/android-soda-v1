@@ -265,8 +265,10 @@ public class Util {
 	    	};
 	    }
 	    public static void stopUpdateLocation(){
+	    	if(lmListener!=null){
 	    	lm.removeUpdates(lmListener);
 	    	lmListener=null;
+	    	}
 	    }
 	    
 	    public static Location getLocation(Activity context) {
