@@ -488,6 +488,7 @@ public class ListActivity extends FragmentActivity {
 	        	//Log.d("test","test index:"+ShareVariable.selectedMarkerIndex);
 	        	ShareVariable.isChangeMarkerIndex=false;
 	        	((FrameLayout)scForPI.getChildAt(1)).getChildAt(0).scrollTo(0, (int) ((ShareVariable.screenW / 2 * ShareVariable.selectedMarkerIndex) - ShareVariable.screenW * 0.2));
+	        	_btnTakeMeThere.setVisibility(View.VISIBLE);
 	        	return false;
 	        }
 	    };      
