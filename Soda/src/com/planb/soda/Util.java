@@ -195,9 +195,9 @@ public class Util {
         }
         return sb.toString();
     }
-	 public static Location getLocation(LocationManager lm){
-			return ShareVariable.currentLocation;
-		}
+    public static Location getLocation(LocationManager lm){
+		return ShareVariable.currentLocation;
+	}
 	 
 	 public static void checkLocationServices(final Activity context){
 		 LocationManager lm = null;
@@ -211,26 +211,26 @@ public class Util {
 				public void onLocationChanged(Location location) {
 					// TODO Auto-generated method stub
 					//Log.d("test","test onLocationChanged");		
-					ShareVariable.currentLocation
+					ShareVariable.currentLocation=location;
 				}
 
 				@Override
 				public void onProviderDisabled(String provider) {
 					// TODO Auto-generated method stub
-					Log.d("test","test onProviderDisabled");
+					//Log.d("test","test onProviderDisabled");
 				}
 
 				@Override
 				public void onProviderEnabled(String provider) {
 					// TODO Auto-generated method stub
-					Log.d("test","test onProviderEnabled");
+					//Log.d("test","test onProviderEnabled");
 				}
 
 				@Override
 				public void onStatusChanged(String provider, int status,
 						Bundle extras) {
 					// TODO Auto-generated method stub
-					Log.d("test","test onStatusChanged");
+					//Log.d("test","test onStatusChanged");
 				}
 	        };
 	        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,0,locationListener);
