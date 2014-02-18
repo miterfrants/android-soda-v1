@@ -234,6 +234,7 @@ public class Util {
 
 	        }
 	       lmListener=Util.getNewListener();
+	       ShareVariable.currentLocation= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	       lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,5,lmListener);
 	 }
 	 
@@ -244,26 +245,25 @@ public class Util {
 				public void onLocationChanged(Location location) {
 					// TODO Auto-generated method stub
 					ShareVariable.currentLocation=location;
-					
 				}
 
 				@Override
 				public void onProviderDisabled(String provider) {
 					// TODO Auto-generated method stub
-					
+					ShareVariable.currentLocation= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				}
 
 				@Override
 				public void onProviderEnabled(String provider) {
 					// TODO Auto-generated method stub
-					
+					ShareVariable.currentLocation= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				}
 
 				@Override
 				public void onStatusChanged(String provider, int status,
 						Bundle extras) {
 					// TODO Auto-generated method stub
-					
+					ShareVariable.currentLocation= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				}
 	    		
 	    	};

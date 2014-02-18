@@ -101,8 +101,6 @@ public class ListActivity extends FragmentActivity {
 		ldLayout.setAlpha(1.0f);
 		ldLayout.bringToFront();
 		rlForContent.addView(ldLayout);
-		//cate page check location service enable or not 
-		//this block check again
 		if(ShareVariable.currentLocation==null){
 			Toast toast = Toast.makeText(this, "請先確定 GPS 定位已開啟。", Toast.LENGTH_SHORT);
     		toast.show();
