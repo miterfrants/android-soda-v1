@@ -36,7 +36,7 @@ public class PlaceItemBottomLayout extends RelativeLayout {
 		}else{
 			title.setTextSize((int) (ShareVariable.screenW*0.0347222));
 		}
-    	title.setGravity(Gravity.RIGHT);
+    	
     	title.setTextColor(0xFF000000);
     	//title set position and view
     	double titleW=screenW*0.625;
@@ -45,8 +45,14 @@ public class PlaceItemBottomLayout extends RelativeLayout {
 		rlpForTitle.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		rlpForTitle.rightMargin=(int) (screenW*0.015625);
 		rlpForTitle.width=(int) titleW;
+		title.setGravity(Gravity.RIGHT);
+		Log.d("test","test len:"+title.length());
+		if(title.length()>=9){
+			title.setGravity(Gravity.LEFT);
+		}
 		title.setLayoutParams(rlpForTitle);
 		title.setSingleLine(true);
+		
 		this.addView(title);
 		
 		
