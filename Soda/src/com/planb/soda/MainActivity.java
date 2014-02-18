@@ -129,12 +129,18 @@ public class MainActivity extends Activity {
 	}
 
     public void onDestroy() {
+    	ViewServer.get(this).removeWindow(this);
+    	Util.stopUpdateLocation(this);
         super.onDestroy();  
-        ViewServer.get(this).removeWindow(this);  
+          
    }  
-  
+    public void onPause(){
+    	Util.stopUpdateLocation(this);
+    	super.onPause();
+    }
     public void onResume() {  
         super.onResume();  
-        ViewServer.get(this).setFocusedWindow(this);  
+        ViewServer.get(this).setFocusedWindow(this);
+        Util.checkLocationServices(this);
    }  
 }

@@ -808,11 +808,11 @@ public class ListActivity extends FragmentActivity {
     public void onResume() {
         super.onResume();  
         ViewServer.get(this).setFocusedWindow(this);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, ShareVariable.listener);
+        Util.checkLocationServices(this);
    }
     public void onPause(){
     	this.finish();
+    	Util.stopUpdateLocation(this);
         super.onPause();
-        lm.removeUpdates(ShareVariable.listener);
     }
 }

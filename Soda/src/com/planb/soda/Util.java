@@ -37,6 +37,7 @@ import android.util.Log;
 public class Util {
 	public static String tag="com.planb.soda.Util";
 	public static LocationListener listener=null;
+	private static String LOCATION_SERVICE;
     /**
      * Convert byte array to hex string
      * @param bytes
@@ -266,5 +267,9 @@ public class Util {
 	            dialog.show();
 
 	        }
+	 }
+	 public static void stopUpdateLocation(Activity context){
+		 LocationManager lm =(LocationManager) context.getApplicationContext().getSystemService(LOCATION_SERVICE);
+		lm.removeUpdates(listener);
 	 }
 }

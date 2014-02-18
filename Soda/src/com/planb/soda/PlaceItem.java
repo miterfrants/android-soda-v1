@@ -61,7 +61,7 @@ public class PlaceItem extends RelativeLayout {
 		LocationManager lm = (LocationManager) this.getContext()
 				.getApplicationContext()
 				.getSystemService(Context.LOCATION_SERVICE);
-		Location loc = ShareVariable.getLocation(lm);
+		Location loc = Util.getLocation(lm);
 		Location distLoc = new Location("");
 		distLoc.setLatitude(lat);
 		distLoc.setLongitude(lng);
