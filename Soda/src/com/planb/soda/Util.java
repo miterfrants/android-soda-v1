@@ -235,15 +235,14 @@ public class Util {
 	        }
 	       lmListener=Util.getNewListener();
 	       if(gps_enabled){
-	    	   ShareVariable.currentLocation= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	    	   lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,5,lmListener);
+	    	   ShareVariable.currentLocation= lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	       }else{
-	    	   ShareVariable.currentLocation= lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 	    	   lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,200,5,lmListener);
+	    	   ShareVariable.currentLocation= lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 	       }
 	 }
-	 
-	    public static LocationListener getNewListener(){
+	 public static LocationListener getNewListener(){
 	    	return new LocationListener(){
 
 				@Override
