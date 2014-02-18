@@ -718,6 +718,9 @@ public class ListActivity extends FragmentActivity {
                     btn.rateLayout.setRating(0);
                     if(item.has("rating")){
 						btn.rateLayout.setRating((float) item.getDouble("rating")/5);
+						if(item.getDouble("rating")==0){
+							btn.rateLayout.setVisibility(View.INVISIBLE);
+						}
 						btn.rateLayout.txtRate.setText(String.valueOf(item.getDouble("rating")));
                         btn.rateLayout.txtRate.setTextColor(0xFFFFFFFF);
                         btn.rateLayout.setBackgroundColor(0xCC999999);
