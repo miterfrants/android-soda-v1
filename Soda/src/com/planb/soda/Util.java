@@ -27,6 +27,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.GpsStatus.Listener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -37,7 +38,7 @@ import android.util.Log;
 public class Util {
 	public static String tag="com.planb.soda.Util";
 	public static LocationListener listener=null;
-	private static String LOCATION_SERVICE;
+	public static LocationManager lm=null;
     /**
      * Convert byte array to hex string
      * @param bytes
@@ -201,40 +202,37 @@ public class Util {
 	}
 	 
 	 public static void checkLocationServices(final Activity context){
-		 LocationManager lm = null;
 	     boolean gps_enabled,network_enabled;
 	        if(lm==null){
 	        	lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 	        }
-	        LocationListener locationListener=new LocationListener(){
-
+	        listener=new LocationListener(){
 				@Override
 				public void onLocationChanged(Location location) {
-					// TODO Auto-generated method stub
-					//Log.d("test","test onLocationChanged");		
+					// TODO Auto-generated method stub		
 					ShareVariable.currentLocation=location;
 				}
 
 				@Override
 				public void onProviderDisabled(String provider) {
 					// TODO Auto-generated method stub
-					//Log.d("test","test onProviderDisabled");
+					Log.d("test","test onProviderDisabled");
 				}
 
 				@Override
 				public void onProviderEnabled(String provider) {
 					// TODO Auto-generated method stub
-					//Log.d("test","test onProviderEnabled");
+					Log.d("test","test onProviderEnabled");
 				}
 
 				@Override
 				public void onStatusChanged(String provider, int status,
 						Bundle extras) {
 					// TODO Auto-generated method stub
-					//Log.d("test","test onStatusChanged");
+					Log.d("test","test onStatusChanged");
 				}
 	        };
-	        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,5,locationListener);
+	        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,5,listener);
 	        gps_enabled=false;
 	        network_enabled =false;
 	        try{
@@ -269,7 +267,16 @@ public class Util {
 	        }
 	 }
 	 public static void stopUpdateLocation(Activity context){
-		 LocationManager lm =(LocationManager) context.getApplicationContext().getSystemService(LOCATION_SERVICE);
-		lm.removeUpdates(listener);
+		 try{
+			 if(lm==null){
+				 lm =(LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+			 }
+			 if(listener!=null){
+			 	lm.removeUpdates(listener);
+			 }
+		 }catch(Exception ex){
+			 ex.printStackTrace();
+		 }
+		
 	 }
 }

@@ -130,7 +130,6 @@ public class MainActivity extends Activity {
 
     public void onDestroy() {
     	ViewServer.get(this).removeWindow(this);
-    	Util.stopUpdateLocation(this);
         super.onDestroy();  
           
    }  

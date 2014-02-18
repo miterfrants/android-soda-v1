@@ -802,17 +802,14 @@ public class ListActivity extends FragmentActivity {
 	}
     public void onDestroy() {
     	this.finish();
-        super.onDestroy();
-        ViewServer.get(this).removeWindow(this);  
+        super.onDestroy();  
    }  
     public void onResume() {
         super.onResume();  
-        ViewServer.get(this).setFocusedWindow(this);
         Util.checkLocationServices(this);
    }
     public void onPause(){
-    	this.finish();
-    	Util.stopUpdateLocation(this);
         super.onPause();
+        Util.stopUpdateLocation(this);
     }
 }
