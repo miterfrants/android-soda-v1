@@ -45,6 +45,8 @@ public class RateLayout extends RelativeLayout {
 
 		rateBar =(RatingBar) ((RelativeLayout) this.getChildAt(0)).getChildAt(1);
 		rateBar.setRating((float) 0.00);
+
+		
 		RelativeLayout.LayoutParams rlpForRateBar= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForRateBar.addRule(RelativeLayout.CENTER_VERTICAL);
 		rlpForRateBar.addRule(RelativeLayout.ALIGN_PARENT_LEFT);

@@ -26,7 +26,7 @@ public class ShareVariable {
  	 public static String domain="www.planb-on.com";
  	 public static String reportController="/controller/mobile/report.aspx";
 	 public static Location currentLocation=null;
-	 
+	 public static boolean isListActivity=false;
 	 public static SupportMapFragment mapFr=null;
 	 public static List<Marker> arrMarker=new ArrayList<Marker>();
 	 public static int screenW=0;

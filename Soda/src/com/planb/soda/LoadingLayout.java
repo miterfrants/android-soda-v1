@@ -19,7 +19,7 @@ public class LoadingLayout extends LinearLayout {
 		this.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT));
 		this.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
 		
-		GifMovieView imgLoading=new GifMovieView(context);
+		imgLoading=new GifMovieView(context);
 		imgLoading.setMovieResource(R.drawable.loading);
 		RelativeLayout.LayoutParams rlpForImg= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForImg.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -29,6 +29,8 @@ public class LoadingLayout extends LinearLayout {
 		txtLoadingStatus=new TextView(context);
 		RelativeLayout.LayoutParams rlpForTxtLoadingStatus=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 		rlpForTxtLoadingStatus.addRule(RelativeLayout.CENTER_IN_PARENT);
+		rlpForTxtLoadingStatus.width=(int) (ShareVariable.screenW*0.8);
+		txtLoadingStatus.setGravity(Gravity.CENTER_HORIZONTAL);
 		txtLoadingStatus.setLayoutParams(rlpForTxtLoadingStatus);
 		txtLoadingStatus.setPadding(0,(int) (ShareVariable.screenW*0.02727),0,0);
 		txtLoadingStatus.setText("正在讀取資料中...");

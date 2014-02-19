@@ -31,6 +31,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 public class Util {
 	public static String tag="com.planb.soda.Util";
@@ -236,10 +237,10 @@ public class Util {
 	 }
 	 public static LocationListener getNewListener(){
 	    	return new LocationListener(){
-
 				@Override
 				public void onLocationChanged(Location location) {
 					// TODO Auto-generated method stub
+					Log.d("test","test aaa");
 					ShareVariable.currentLocation=location;
 				}
 
@@ -272,6 +273,7 @@ public class Util {
 	    }
 	    
 	    public static Location getLocation(Activity context) {
+	    	
 	    	Location location=null;
 	    	lmListener=Util.getNewListener();
 	        try {
@@ -290,22 +292,24 @@ public class Util {
 	            if (!isGPSEnabled && !isNetworkEnabled) {
 	                // no network provider is enabled
 	            } else {
-	                if (isNetworkEnabled) {
-	                	
-	                    if (lm != null) {
-	                    	lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,200,5,lmListener);
-	                        location = lm
-	                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-	                    }
-	                }
-	                // if GPS Enabled get lat/long using GPS Services
 	                if (isGPSEnabled) {
-	                    if (location == null) {
+	                	if (location == null) {
 	                        if (lm != null) {
-	                        	lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,5,lmListener);
+	                        	Log.d("test","test gps enable");
+	                        	lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,200,0,lmListener);
 	                            location = lm 
 	                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	                        }
+	                    }
+	                    
+	                }else{
+	                // if GPS Enabled get lat/long using GPS Services
+	                //if (isGPSEnabled) {
+	                	if (lm != null) {
+	                    	Log.d("test","test network enable");
+	                    	lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,200,0,lmListener);
+	                        location = lm
+	                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 	                    }
 	                }
 	            }

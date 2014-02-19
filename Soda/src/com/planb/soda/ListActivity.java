@@ -78,7 +78,7 @@ public class ListActivity extends FragmentActivity {
 	private Button _btnTakeMeThere =null;
     public LocationManager lm=null;
     public LocationListener lmListener=null;
-
+    public Runnable addThread=null;
 	public static List<PlaceItem> arrListResult=new ArrayList<PlaceItem>();
 	@Override 
 	protected void onStart(){
@@ -89,7 +89,7 @@ public class ListActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		ShareVariable.arrMarker.clear();
 		arrListResult.clear();
-		
+		ShareVariable.isListActivity=true;
 		super.onCreate(savedInstanceState);
 		
 		ViewServer.get(this).addWindow(this); 
@@ -104,10 +104,14 @@ public class ListActivity extends FragmentActivity {
 		rlForContent.addView(ldLayout);
 		Util.checkLocationServices(this);
 		ShareVariable.currentLocation=Util.getLocation(this);
+		
 		if(ShareVariable.currentLocation==null){
 			Toast toast = Toast.makeText(this, "請先確定 GPS 定位已開啟。", Toast.LENGTH_SHORT);
     		toast.show();
 			return;
+		}else{
+//			Toast toast = Toast.makeText(this, ShareVariable.currentLocation.getLatitude()+","+ShareVariable.currentLocation.getLongitude(), Toast.LENGTH_LONG);
+//    		toast.show();
 		}
 		slideMenu =(SlidingMenu) this.findViewById(com.planb.soda.R.id.rl_for_activity_list);
 		keyword=getIntent().getStringExtra("keyword");
@@ -284,7 +288,7 @@ public class ListActivity extends FragmentActivity {
 	    slideMenu.setMenu(rightView);
 	    slideMenu.setMode(SlidingMenu.RIGHT);
 	    slideMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-	    slideMenu.setBehindWidth((int) (ShareVariable.screenW*0.9));
+	    slideMenu.setBehindWidth((int) (ShareVariable.screenW*0.8));
 	    slideMenu.setOnOpenedListener(new OnOpenedListener(){
 			@Override
 			public void onOpened() {
@@ -687,7 +691,8 @@ public class ListActivity extends FragmentActivity {
 	   try{
 		   //data prepare
 		   String status =res.getString("status");
-		   if(status.equals("OK")){
+		   
+		   if(status.equals("OK") && res.getJSONArray("results").length()>0){
 			   arrRes=res.getJSONArray("results");
 			   for(int i=0;i<arrRes.length();i++){
 				   	JSONObject item= arrRes.getJSONObject(i);
@@ -750,15 +755,18 @@ public class ListActivity extends FragmentActivity {
 			    });
 
 			   //ui 
-			   this.runOnUiThread(new Runnable(){
+			   this.runOnUiThread(addThread =new Runnable(){
 				   @Override
 				   public void run(){
+					   if(!ShareVariable.isListActivity){
+						   return;
+					   }
 					   LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
 					   
 					   rlList.setBackgroundColor(0xFFcccccc);
 					   rlList.removeAllViews();
 					   for(int i=0;i<arrListResult.size();i++){
-						   RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+						    RelativeLayout.LayoutParams lpForButton= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 							lpForButton.height=screenW/2;
 							PlaceItem btn=(PlaceItem) arrListResult.get(i);
 							btn.index=i;
@@ -801,8 +809,17 @@ public class ListActivity extends FragmentActivity {
 			   });
 			   
 		   }else{
-			   Log.d("test","test:"+ status);
-			   ldLayout.txtLoadingStatus.setText("您所在的位置沒有資料。");
+			   
+			   this.runOnUiThread(new Runnable(){
+				   @Override
+				   public void run(){
+					   ldLayout.txtLoadingStatus.setText("您所在的位置沒有資料");
+					   ldLayout.imgLoading.setVisibility(View.INVISIBLE);
+				   }
+				});
+			   
+			  
+			   
 		   }
 	   }catch(Exception ex){
 		   Log.d("test","test:exception occur:" + ex.getMessage());
@@ -810,8 +827,6 @@ public class ListActivity extends FragmentActivity {
 	   }
 	}
     public void onDestroy() {
-    	LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
-    	rlList.removeAllViews();
         super.onDestroy();  
    }  
     public void onResume() {
@@ -821,6 +836,7 @@ public class ListActivity extends FragmentActivity {
         }
    }
     public void onPause(){
+    	ShareVariable.isListActivity=false;
     	Util.stopUpdateLocation();
         super.onPause();
     }
