@@ -1,6 +1,7 @@
 /gen
 /bin
 /assets
+/proguard_logs
 .classpath
 project.properties
 .project

@@ -11,7 +11,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library>
@@ -34,8 +34,18 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="ImageViewEx" />
-    <orderEntry type="module" module-name="PullToRefresh" />
     <orderEntry type="module" module-name="SlidingMenu" />
+    <orderEntry type="module" module-name="PullToRefresh-library" />
+    <orderEntry type="module" module-name="PullToRefreshViewPager" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../GoogleAnalyticsServicesAndroid_3.01/libGoogleAnalyticsServices.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

@@ -32,6 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
@@ -81,11 +82,7 @@ GooglePlayServicesClient.OnConnectionFailedListener
     public LocationClient mLocationClient=null;
     public Runnable addThread=null;
 	public static List<PlaceItem> arrListResult=new ArrayList<PlaceItem>();
-	@Override 
-	protected void onStart(){
-		super.onStart();
-		mLocationClient.connect();
-	}
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -634,7 +631,7 @@ GooglePlayServicesClient.OnConnectionFailedListener
 		ShareVariable.currentLocation=mLocationClient.getLastLocation();
 		
 		if(ShareVariable.currentLocation==null){
-			Toast toast = Toast.makeText(this, "請先確定 GPS 定位已開啟。", Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(this, "請確定您的位置能夠接收 GPS 訊號。", Toast.LENGTH_SHORT);
     		toast.show();
 			return;
 		}else{
@@ -845,15 +842,24 @@ GooglePlayServicesClient.OnConnectionFailedListener
 		
 		getData(true);
 	}
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        mLocationClient.connect();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
 	@Override
 	public void onStop(){
 		mLocationClient.disconnect();
 		super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
 	}
+
 	@Override
 	public void onDisconnected() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

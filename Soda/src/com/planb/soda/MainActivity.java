@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.loopj.android.http.AsyncHttpClient;
@@ -130,6 +131,18 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(com.planb.soda.R.menu.main, menu);
 		return true;
 	}
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
+    }
 
     public void onDestroy() {
     	ViewServer.get(this).removeWindow(this);
