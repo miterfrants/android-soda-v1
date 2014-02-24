@@ -260,7 +260,6 @@ GooglePlayServicesClient.OnConnectionFailedListener
 	        			ShareVariable.selectedMarkerIndex=i;
 	        		}
 	        	}
-	        	//Log.d("test","test index:"+ShareVariable.selectedMarkerIndex);
 	        	ShareVariable.isChangeMarkerIndex=false;
 	        	((FrameLayout)scForPI.getChildAt(1)).getChildAt(0).scrollTo(0, (int) ((ShareVariable.screenW / 2 * ShareVariable.selectedMarkerIndex) - ShareVariable.screenW * 0.2));
 	        	_btnTakeMeThere.setVisibility(View.VISIBLE);
@@ -461,7 +460,6 @@ GooglePlayServicesClient.OnConnectionFailedListener
 	   try{
 		   //data prepare
 		   String status =res.getString("status");
-		   
 		   if(status.equals("OK") && res.getJSONArray("results").length()>0){
 			   arrRes=res.getJSONArray("results");
 			   for(int i=0;i<arrRes.length();i++){
@@ -555,9 +553,7 @@ GooglePlayServicesClient.OnConnectionFailedListener
 							}catch(Exception ex){
 								rlList.removeView(arrListResult.get(i));
 								rlList.addView(arrListResult.get(i));
-								
 							}
-							
 					   }
 					   if(res.has("next_page_token")){
 						   try {
@@ -571,7 +567,6 @@ GooglePlayServicesClient.OnConnectionFailedListener
 						   token="";
 						   showContent(false);
 					   }
-					   
 					   if(ShareVariable.arrMarker.size()>0){
 						   ShareVariable.arrMarker.get(0).showInfoWindow();
 					   }
@@ -579,7 +574,6 @@ GooglePlayServicesClient.OnConnectionFailedListener
 			   });
 			   
 		   }else{
-			   
 			   this.runOnUiThread(new Runnable(){
 				   @Override
 				   public void run(){
@@ -587,9 +581,6 @@ GooglePlayServicesClient.OnConnectionFailedListener
 					   ldLayout.imgLoading.setVisibility(View.INVISIBLE);
 				   }
 				});
-			   
-			  
-			   
 		   }
 	   }catch(Exception ex){
 		   Log.d("test","test:exception occur:" + ex.getMessage());

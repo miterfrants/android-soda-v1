@@ -1,6 +1,5 @@
 package com.planb.soda;
 
-import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -61,7 +60,7 @@ public class MainActivity extends Activity {
 						i);
 				PlaceCateLayout btn = new PlaceCateLayout(
 						this.getApplicationContext());
-				btn.setBackgroundColor(Color.parseColor(item.getString("color")));
+                btn.setBackgroundColor(Color.parseColor(item.getString("color")));
 				RelativeLayout.LayoutParams lpForButton = new RelativeLayout.LayoutParams(
 						RelativeLayout.LayoutParams.WRAP_CONTENT,
 						RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -80,7 +79,7 @@ public class MainActivity extends Activity {
 				int id = getApplicationContext().getResources().getIdentifier(
 						item.getString("pic"), "drawable", getPackageName());
 				Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
-				btn.cateButton.setBackground(null);
+				btn.cateButton.setBackgroundDrawable(null);
 				btn.cateButton.setImageBitmap(Bitmap.createScaledBitmap(bm, ShareVariable.screenW/6, ShareVariable.screenW/6,
 						false));
 				btn.txtTitle.setText(item.getString("name"));
@@ -114,8 +113,6 @@ public class MainActivity extends Activity {
 						    }
 						});
 						v.getContext().startActivity(intentMain);
-						
-
 					}
 				});
 				rl.addView(btn);
