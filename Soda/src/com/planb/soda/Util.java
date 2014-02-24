@@ -240,7 +240,6 @@ public class Util {
 				@Override
 				public void onLocationChanged(Location location) {
 					// TODO Auto-generated method stub
-					Log.d("test","test aaa");
 					ShareVariable.currentLocation=location;
 				}
 

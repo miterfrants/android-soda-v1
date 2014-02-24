@@ -117,8 +117,10 @@ GooglePlayServicesClient.OnConnectionFailedListener
 	    		slideMenu.showContent();
 	    		return true;  
 	    	}
-            startActivity(new  Intent(this, MainActivity.class));
-            finish();
+            
+            Intent intent = new Intent(this, MainActivity.class);     
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             return true;
         }
         return super.onKeyUp(keyCode, event);
@@ -527,6 +529,7 @@ GooglePlayServicesClient.OnConnectionFailedListener
 				   @Override
 				   public void run(){
 					   if(!ShareVariable.isListActivity){
+						   ListActivity.this.onPause();
 						   return;
 					   }
 					   LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
