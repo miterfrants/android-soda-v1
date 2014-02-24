@@ -529,7 +529,6 @@ GooglePlayServicesClient.OnConnectionFailedListener
 				   @Override
 				   public void run(){
 					   if(!ShareVariable.isListActivity){
-						   ListActivity.this.onPause();
 						   return;
 					   }
 					   LinearLayout rlList =(LinearLayout) findViewById(com.planb.soda.R.id.ll_list);
