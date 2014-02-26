@@ -466,8 +466,15 @@ GooglePlayServicesClient.OnConnectionFailedListener
 				   	JSONObject item= arrRes.getJSONObject(i);
 				   	JSONObject location=item.getJSONObject("geometry").getJSONObject("location");
 				   	PlaceItem btn=new PlaceItem(this.getApplicationContext(),this.getWindow().getWindowManager().getDefaultDisplay().getWidth());
-					btn.bottomLayout.title.setText(item.getString("name"));
-					btn.name=item.getString("name");
+                    String shortenStoreName = null;
+                    String fullStoreName = item.getString("name");
+                    if (fullStoreName.length()>=11){
+                        shortenStoreName=fullStoreName.substring(0, Math.min(fullStoreName.length(), 11))+"...";
+                        Log.d("test", fullStoreName + shortenStoreName);
+                    }else {shortenStoreName=fullStoreName;}
+
+                    btn.name=fullStoreName;
+					btn.bottomLayout.title.setText(shortenStoreName);
 					btn.lat=Double.parseDouble(location.getString("lat"));
 					btn.lng=Double.parseDouble(location.getString("lng"));
                     btn.rateLayout.setRating(0);

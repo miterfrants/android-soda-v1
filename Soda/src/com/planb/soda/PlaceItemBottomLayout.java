@@ -46,9 +46,6 @@ public class PlaceItemBottomLayout extends RelativeLayout {
 		rlpForTitle.rightMargin=(int) (screenW*0.015625);
 		rlpForTitle.width=(int) titleW;
 		title.setGravity(Gravity.RIGHT);
-		if(title.getText().length()>=9){
-			title.setGravity(Gravity.LEFT);
-		}
 		title.setLayoutParams(rlpForTitle);
 		title.setSingleLine(true);
 		
