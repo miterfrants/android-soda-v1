@@ -81,6 +81,7 @@ GooglePlayServicesClient.OnConnectionFailedListener
 	private Button _btnTakeMeThere =null;
     public LocationClient mLocationClient=null;
     public Runnable addThread=null;
+    public boolean isGenerate=false; 
 	public static List<PlaceItem> arrListResult=new ArrayList<PlaceItem>();
 
 	
@@ -607,7 +608,10 @@ GooglePlayServicesClient.OnConnectionFailedListener
 
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		// TODO Auto-generated method stub
+		if(isGenerate){
+			return;
+		}
+		isGenerate=true;
 		ShareVariable.arrMarker.clear();
 		arrListResult.clear();
 		ShareVariable.isListActivity=true;
